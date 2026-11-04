@@ -1,0 +1,3263 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
+  <title>第77回津田沼祭 来場者アンケート｜燈</title>
+
+  <!-- Google Fonts: Shippori Mincho -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+JP:wght@400;500;600;700&family=Shippori+Mincho:wght@400;500;600;700&display=swap" rel="stylesheet">
+
+  <style>
+    :root {
+      /* 公式カラーパレット（大祭26_ロゴ.pdf 準拠） */
+      --navy-deep: #131e33;
+      --navy-main: #233657;
+      --navy-card: rgba(22, 35, 58, 0.78);
+      --cream-light: #f9ecc2;
+      --cream-muted: rgba(249, 236, 194, 0.72);
+      --cream-faint: rgba(249, 236, 194, 0.16);
+      --amber-gold: #f6b26d;
+      --Amber-glow: rgba(246, 178, 109, 0.35);
+      --flame-orange: #ec6645;
+      --flame-red: #b43534;
+      --deep-burgundy: #420506;
+
+      --font-mincho: 'Shippori Mincho', 'Yu Mincho', 'Hiragino Mincho ProN', 'MS PMincho', serif;
+    --font-sans: 'Noto Sans JP', -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Hiragino Sans', 'Hiragino Kaku Gothic ProN', Meiryo, sans-serif;
+    --font-serif: var(--font-mincho);
+      --transition-smooth: cubic-bezier(0.22, 1, 0.36, 1);
+
+      /* 送信完了アニメーション（完成版 v3 そのままの設定値） */
+      --bg-navy: #111b36;
+      --bg-ivory-mid: #e8dfd1;
+      --bg-white: #fffcf7;
+      --heading-color: #1c2b47;
+      --body-color: #3b4b66;
+      --logo-stage-width: clamp(320px, 92vw, 520px);
+      --logo-anchor-x: 0.50;
+      --logo-anchor-y: 0.335;
+      --logo-bottom-y: 0.61;
+    }
+
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+      -webkit-tap-highlight-color: transparent;
+    }
+
+    html, body {
+      width: 100%;
+      min-height: 100dvh;
+      background-color: var(--navy-deep);
+      color: var(--cream-light);
+      font-family: var(--font-sans);
+      line-height: 1.65;
+      letter-spacing: 0.04em;
+      overflow-x: hidden;
+      -webkit-font-smoothing: antialiased;
+    }
+
+    /* 背景：玉ボケは使わず、深い夜空のグラデーションと繊細な金線フレームで洗練さを演出 */
+    body {
+      background:
+        radial-gradient(circle at 50% 24%, rgba(45, 70, 112, 0.48) 0%, rgba(35, 54, 87, 0.88) 48%, #121d31 100%);
+      background-attachment: fixed;
+      position: relative;
+      display: flex;
+      justify-content: center;
+    }
+
+    /* 画面外周の繊細な金色の細線（ヘアラインフレーム） */
+    .architectural-frame {
+      position: fixed;
+      inset: 10px;
+      border: 1px solid rgba(249, 236, 194, 0.14);
+      pointer-events: none;
+      z-index: 10;
+    }
+    .architectural-frame::before,
+    .architectural-frame::after {
+      content: '';
+      position: absolute;
+      width: 10px;
+      height: 10px;
+      border-color: rgba(246, 178, 109, 0.45);
+      border-style: solid;
+    }
+    .architectural-frame::before {
+      top: -1px;
+      left: -1px;
+      border-width: 1px 0 0 1px;
+    }
+    .architectural-frame::after {
+      bottom: -1px;
+      right: -1px;
+      border-width: 0 1px 1px 0;
+    }
+
+    /* メインコンテナ（スマホ最適幅） */
+    .app-shell {
+      width: 100%;
+      max-width: 480px;
+      min-height: 100dvh;
+      padding: 22px 20px 36px;
+      display: flex;
+      flex-direction: column;
+      position: relative;
+      z-index: 2;
+    }
+
+    /* 強調色（第77回の「77」など） */
+    .hl-amber {
+      color: var(--amber-gold);
+      font-weight: 600;
+    }
+
+    /* ==========================================
+       画面0：扉ページ（カバー画面）
+       ========================================== */
+    #screen-cover {
+      flex: 1;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      text-align: center;
+      padding: 16px 6px;
+      transition: opacity 0.55s var(--transition-smooth), transform 0.55s var(--transition-smooth);
+    }
+
+    #screen-cover.hidden-screen {
+      display: none;
+    }
+
+    .cover-logo-stage {
+      position: relative;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      margin-bottom: 26px;
+      animation: coverReveal 1.2s var(--transition-smooth) forwards;
+    }
+
+    /* ロゴ背後のほのかな温かみ（玉ボケではなく中心の灯火の照り返し） */
+    .cover-logo-stage::before {
+      content: '';
+      position: absolute;
+      top: 42%;
+      left: 50%;
+      width: 220px;
+      height: 220px;
+      transform: translate(-50%, -50%);
+      background: radial-gradient(circle, rgba(246, 178, 109, 0.16) 0%, rgba(236, 102, 69, 0.05) 45%, transparent 72%);
+      pointer-events: none;
+      z-index: -1;
+    }
+
+    .cover-emblem-svg {
+      width: 118px;
+      height: auto;
+      filter: drop-shadow(0 4px 18px rgba(236, 102, 69, 0.28));
+      margin-bottom: 18px;
+      animation: subtleFlameFloat 4s ease-in-out infinite;
+    }
+
+    .cover-kanji-svg {
+      width: 86px;
+      height: auto;
+      filter: drop-shadow(0 0 14px rgba(249, 236, 194, 0.42)) drop-shadow(0 0 28px rgba(246, 178, 109, 0.22));
+      margin-bottom: 20px;
+    }
+
+    .cover-univ-sub {
+      font-size: 0.92rem;
+      letter-spacing: 0.16em;
+      color: var(--cream-light);
+      opacity: 0.92;
+      margin-bottom: 4px;
+    }
+
+    .cover-fest-title {
+      font-family: var(--font-mincho);
+      font-size: 1.75rem;
+      font-weight: 600;
+      letter-spacing: 0.22em;
+      color: var(--cream-light);
+      text-shadow: 0 2px 14px rgba(249, 236, 194, 0.2);
+      margin-bottom: 22px;
+      padding-left: 0.22em;
+    }
+
+    .cover-divider {
+      width: 64px;
+      height: 1px;
+      background: linear-gradient(90deg, transparent, var(--amber-gold), transparent);
+      margin: 0 auto 20px;
+    }
+
+    .cover-survey-heading {
+      font-family: var(--font-mincho);
+      font-size: 1.15rem;
+      font-weight: 500;
+      letter-spacing: 0.14em;
+      color: var(--cream-light);
+      margin-bottom: 10px;
+    }
+
+    .cover-lead {
+      font-family: var(--font-mincho);
+      font-size: 0.84rem;
+      color: var(--cream-muted);
+      max-width: 310px;
+      line-height: 1.75;
+      margin-bottom: 22px;
+    }
+
+    /* 安心感バッジ（所要時間表記） */
+    .time-badge {
+      display: inline-flex;
+      align-items: center;
+      gap: 7px;
+      padding: 6px 16px;
+      border-radius: 999px;
+      background: rgba(249, 236, 194, 0.07);
+      border: 1px solid rgba(246, 178, 109, 0.38);
+      color: var(--cream-light);
+      font-size: 0.8rem;
+      letter-spacing: 0.06em;
+      margin-bottom: 22px;
+    }
+
+    .time-badge-dot {
+      width: 7px;
+      height: 7px;
+      border-radius: 50%;
+      background: var(--amber-gold);
+      box-shadow: 0 0 8px var(--amber-gold);
+    }
+
+    /* メインCTAボタン */
+    .btn-primary-flame {
+      position: relative;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      gap: 8px;
+      width: 100%;
+      max-width: 290px;
+      padding: 14px 20px;
+      border-radius: 999px;
+      border: 1px solid rgba(249, 236, 194, 0.55);
+      background: linear-gradient(135deg, rgba(246, 178, 109, 0.24) 0%, rgba(236, 102, 69, 0.34) 55%, rgba(180, 53, 52, 0.38) 100%);
+      color: var(--cream-light);
+      font-family: var(--font-sans);
+      font-size: 0.98rem;
+      font-weight: 600;
+      letter-spacing: 0.10em;
+      white-space: nowrap;
+      word-break: keep-all;
+      cursor: pointer;
+      box-shadow:
+        0 6px 24px rgba(180, 53, 52, 0.28),
+        0 0 18px rgba(246, 178, 109, 0.2),
+        inset 0 1px 0 rgba(249, 236, 194, 0.45);
+      transition: all 0.25s ease;
+      touch-action: manipulation;
+    }
+
+    .btn-primary-flame span,
+    .btn-next span {
+      white-space: nowrap;
+    }
+
+    .btn-primary-flame:hover,
+    .btn-primary-flame:active {
+      transform: translateY(-2px);
+      border-color: var(--cream-light);
+      box-shadow:
+        0 8px 28px rgba(236, 102, 69, 0.42),
+        0 0 24px rgba(246, 178, 109, 0.38),
+        inset 0 1px 0 rgba(249, 236, 194, 0.5);
+    }
+
+    .btn-arrow {
+      font-size: 0.9rem;
+      color: var(--amber-gold);
+      transition: transform 0.25s ease;
+    }
+    .btn-primary-flame:hover .btn-arrow {
+      transform: translateX(4px);
+    }
+
+    /* ==========================================
+       質問画面（STEP 1 / 3 〜 STEP 3 / 3）
+       ========================================== */
+    #screen-survey {
+      display: none;
+      flex-direction: column;
+      flex: 1;
+    }
+
+    #screen-survey.active-screen {
+      display: flex;
+      animation: fadeStepIn 0.45s var(--transition-smooth) forwards;
+    }
+
+    /* コンパクト横組みヘッダー＋STEPインジケーター */
+    .survey-header {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding-bottom: 14px;
+      margin-bottom: 18px;
+      border-bottom: 1px solid rgba(249, 236, 194, 0.14);
+    }
+
+    .header-brand {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      cursor: pointer;
+    }
+
+    .header-emblem {
+      width: 30px;
+      height: auto;
+      filter: drop-shadow(0 0 6px rgba(236, 102, 69, 0.35));
+    }
+
+    .header-kanji {
+      width: 26px;
+      height: auto;
+      filter: drop-shadow(0 0 6px rgba(249, 236, 194, 0.3));
+    }
+
+    .header-title-text {
+      font-family: var(--font-mincho);
+      font-size: 0.75rem;
+      color: var(--cream-muted);
+      letter-spacing: 0.08em;
+      border-left: 1px solid rgba(249, 236, 194, 0.2);
+      padding-left: 9px;
+      line-height: 1.35;
+    }
+
+    /* 案1：STEP 1 / 3 ＋ 3つの光のインジケーター */
+    .step-status-box {
+      display: flex;
+      flex-direction: column;
+      align-items: flex-end;
+      gap: 6px;
+    }
+
+    .step-number-label {
+      font-family: var(--font-mincho);
+      font-size: 0.76rem;
+      letter-spacing: 0.16em;
+      color: var(--amber-gold);
+      font-weight: 600;
+    }
+
+    .step-lights {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+
+    .step-light-node {
+      width: 9px;
+      height: 9px;
+      border-radius: 50%;
+      background: rgba(249, 236, 194, 0.18);
+      border: 1px solid rgba(249, 236, 194, 0.32);
+      transition: all 0.4s var(--transition-smooth);
+    }
+
+    .step-light-node.lit {
+      background: var(--cream-light);
+      border-color: var(--amber-gold);
+      box-shadow: 0 0 8px var(--amber-gold), 0 0 14px var(--flame-orange);
+      transform: scale(1.15);
+    }
+
+    .step-light-line {
+      width: 14px;
+      height: 1px;
+      background: rgba(249, 236, 194, 0.2);
+      transition: background 0.4s ease;
+    }
+
+    .step-light-line.lit {
+      background: var(--amber-gold);
+    }
+
+    /* ステップパネル切り替え */
+    .step-panel {
+      display: none;
+      flex-direction: column;
+      gap: 18px;
+      animation: fadeStepIn 0.4s var(--transition-smooth) forwards;
+    }
+
+    .step-panel.active-step {
+      display: flex;
+    }
+
+    /* 質問カード */
+    .q-card {
+      background: var(--navy-card);
+      border: 1px solid rgba(249, 236, 194, 0.15);
+      border-radius: 14px;
+      padding: 18px 16px;
+      box-shadow: 0 8px 28px rgba(9, 15, 28, 0.45);
+      backdrop-filter: blur(8px);
+      -webkit-backdrop-filter: blur(8px);
+      transition: border-color 0.3s ease;
+    }
+
+    .q-card.has-error {
+      border-color: var(--flame-orange);
+      box-shadow: 0 0 16px rgba(236, 102, 69, 0.28);
+    }
+
+    .q-head {
+      display: flex;
+      align-items: flex-start;
+      justify-content: space-between;
+      gap: 10px;
+      margin-bottom: 13px;
+    }
+
+    .q-title-wrap {
+      display: flex;
+      align-items: baseline;
+      gap: 7px;
+      flex: 1;
+    }
+
+    .q-num {
+      font-size: 0.88rem;
+      font-weight: 700;
+      color: var(--amber-gold);
+      letter-spacing: 0.06em;
+      flex-shrink: 0;
+    }
+
+    .q-title {
+      font-family: var(--font-sans);
+      font-size: 0.97rem;
+      font-weight: 600;
+      color: var(--cream-light);
+      line-height: 1.5;
+    }
+
+    .q-badge {
+      font-size: 0.68rem;
+      padding: 2px 8px;
+      border-radius: 999px;
+      letter-spacing: 0.06em;
+      flex-shrink: 0;
+      margin-top: 2px;
+    }
+
+    .q-badge.req {
+      background: rgba(236, 102, 69, 0.18);
+      border: 1px solid rgba(246, 178, 109, 0.55);
+      color: var(--amber-gold);
+    }
+
+    .q-badge.opt {
+      background: rgba(249, 236, 194, 0.08);
+      border: 1px solid rgba(249, 236, 194, 0.22);
+      color: var(--cream-muted);
+    }
+
+    .q-subnote {
+      font-size: 0.75rem;
+      color: var(--cream-muted);
+      margin-top: -8px;
+      margin-bottom: 12px;
+    }
+
+    /* カテゴリ小見出し（Q3・Q6用） */
+    .cat-group-label {
+      font-size: 0.74rem;
+      color: var(--amber-gold);
+      letter-spacing: 0.08em;
+      margin: 10px 0 7px;
+      display: flex;
+      align-items: center;
+      gap: 6px;
+    }
+    .cat-group-label:first-of-type {
+      margin-top: 2px;
+    }
+    .cat-group-label::after {
+      content: '';
+      flex: 1;
+      height: 1px;
+      background: rgba(246, 178, 109, 0.2);
+    }
+
+    /* ==========================================
+       GitHub Pages 公開テスト版専用スタイル
+       ========================================== */
+    .test-mode-badge {
+      display: inline-flex;
+      align-items: center;
+      gap: 7px;
+      padding: 5px 14px;
+      border-radius: 999px;
+      background: rgba(246, 178, 109, 0.15);
+      border: 1px solid rgba(246, 178, 109, 0.45);
+      color: var(--amber-gold);
+      font-size: 0.75rem;
+      font-weight: 600;
+      letter-spacing: 0.04em;
+      margin-bottom: 16px;
+    }
+    .test-badge-dot {
+      width: 7px;
+      height: 7px;
+      border-radius: 50%;
+      background: var(--amber-gold);
+      box-shadow: 0 0 6px var(--amber-gold);
+      animation: testDotBlink 2s infinite ease-in-out;
+    }
+    @keyframes testDotBlink {
+      0%, 100% { opacity: 0.4; transform: scale(0.9); }
+      50% { opacity: 1; transform: scale(1.1); }
+    }
+    .test-notice-card {
+      margin-top: 18px;
+      padding: 12px 14px;
+      border-radius: 10px;
+      background: rgba(236, 102, 69, 0.12);
+      border: 1px solid rgba(236, 102, 69, 0.4);
+      text-align: left;
+    }
+    .test-notice-title {
+      font-size: 0.82rem;
+      font-weight: 700;
+      color: #ffaa88;
+      margin-bottom: 4px;
+      display: flex;
+      align-items: center;
+      gap: 5px;
+    }
+    .test-notice-text {
+      font-size: 0.76rem;
+      color: var(--cream-muted);
+      line-height: 1.5;
+    }
+    .thankyou-test-pill {
+      display: inline-block;
+      padding: 4px 12px;
+      border-radius: 999px;
+      background: rgba(180, 53, 52, 0.18);
+      border: 1px solid rgba(180, 53, 52, 0.4);
+      color: var(--flame-red);
+      font-size: 0.74rem;
+      font-weight: 700;
+      letter-spacing: 0.05em;
+      margin-bottom: 10px;
+    }
+
+    /* プルダウン選択（Q1・Q3） */
+    .select-wrapper {
+      position: relative;
+      width: 100%;
+    }
+    .select-wrapper::after {
+      content: '';
+      position: absolute;
+      right: 16px;
+      top: 50%;
+      transform: translateY(-50%);
+      width: 0;
+      height: 0;
+      border-left: 5px solid transparent;
+      border-right: 5px solid transparent;
+      border-top: 6px solid var(--amber-gold);
+      pointer-events: none;
+      transition: transform 0.2s ease;
+    }
+    .dropdown-select {
+      width: 100%;
+      appearance: none;
+      -webkit-appearance: none;
+      -moz-appearance: none;
+      background: rgba(15, 25, 44, 0.7);
+      border: 1px solid rgba(249, 236, 194, 0.25);
+      border-radius: 10px;
+      padding: 12px 38px 12px 14px;
+      min-height: 48px;
+      color: rgba(249, 236, 194, 0.45);
+      font-family: var(--font-sans);
+      font-size: 16px;
+      line-height: 1.4;
+      cursor: pointer;
+      outline: none;
+      box-sizing: border-box;
+      transition: all 0.22s var(--transition-smooth);
+    }
+    .dropdown-select:hover {
+      border-color: rgba(246, 178, 109, 0.55);
+      background: rgba(35, 54, 87, 0.75);
+    }
+    .dropdown-select:focus {
+      border-color: var(--amber-gold);
+      box-shadow: 0 0 14px rgba(246, 178, 109, 0.26), inset 0 0 8px rgba(249, 236, 194, 0.08);
+    }
+    .dropdown-select.has-value {
+      color: var(--cream-light);
+      border-color: rgba(246, 178, 109, 0.4);
+    }
+    .dropdown-select option {
+      background-color: #141f36;
+      color: #f9ecc2;
+      font-size: 16px;
+      padding: 8px 12px;
+    }
+    .dropdown-select option[disabled] {
+      color: rgba(249, 236, 194, 0.4);
+    }
+    .dropdown-select optgroup {
+      background-color: #0d1526;
+      color: var(--amber-gold);
+      font-weight: 700;
+      font-size: 15px;
+      padding: 6px 4px;
+    }
+    .q-card.has-error .dropdown-select {
+      border-color: var(--flame-orange);
+      box-shadow: 0 0 10px rgba(236, 102, 69, 0.2);
+    }
+
+    /* 選択肢グリッド＆チップ */
+    .options-grid-2 {
+      display: grid;
+      grid-template-columns: repeat(2, 1fr);
+      gap: 9px;
+    }
+
+    .options-chips {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 8px;
+    }
+
+    .opt-btn {
+      position: relative;
+      appearance: none;
+      background: rgba(15, 25, 44, 0.65);
+      border: 1px solid rgba(249, 236, 194, 0.2);
+      border-radius: 10px;
+      padding: 11px 12px;
+      color: var(--cream-light);
+      font-family: var(--font-sans);
+      font-size: 0.87rem;
+      line-height: 1.4;
+      text-align: center;
+      cursor: pointer;
+      transition: all 0.22s var(--transition-smooth);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 7px;
+      user-select: none;
+    }
+
+    .options-chips .opt-btn {
+      padding: 9px 14px;
+      text-align: left;
+      justify-content: flex-start;
+    }
+
+    .opt-btn:hover {
+      border-color: rgba(246, 178, 109, 0.55);
+      background: rgba(35, 54, 87, 0.75);
+    }
+
+    /* 選択時の点灯フィードバック */
+    .opt-btn.selected {
+      background: linear-gradient(135deg, rgba(246, 178, 109, 0.22) 0%, rgba(236, 102, 69, 0.18) 100%);
+      border-color: var(--amber-gold);
+      color: var(--cream-light);
+      font-weight: 600;
+      box-shadow:
+        0 0 14px rgba(246, 178, 109, 0.26),
+        inset 0 0 8px rgba(249, 236, 194, 0.12);
+    }
+
+    .opt-indicator {
+      width: 14px;
+      height: 14px;
+      border-radius: 50%;
+      border: 1px solid rgba(249, 236, 194, 0.4);
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      flex-shrink: 0;
+      transition: all 0.2s ease;
+    }
+
+    .opt-btn[data-multi="true"] .opt-indicator {
+      border-radius: 4px;
+    }
+
+    .opt-btn.selected .opt-indicator {
+      background: var(--amber-gold);
+      border-color: var(--cream-light);
+      box-shadow: 0 0 8px var(--amber-gold);
+    }
+
+    .opt-btn.selected .opt-indicator::after {
+      content: '';
+      width: 6px;
+      height: 6px;
+      border-radius: 50%;
+      background: var(--deep-burgundy);
+    }
+
+    .opt-btn[data-multi="true"].selected .opt-indicator::after {
+      content: '✓';
+      width: auto;
+      height: auto;
+      background: transparent;
+      color: var(--deep-burgundy);
+      font-size: 0.68rem;
+      font-weight: 700;
+      line-height: 1;
+    }
+
+    /* 「その他」選択時にふわっと開くテキスト入力欄 */
+    .other-input-wrap {
+      max-height: 0;
+      overflow: hidden;
+      opacity: 0;
+      transition: max-height 0.32s var(--transition-smooth), opacity 0.28s ease, margin-top 0.28s ease;
+    }
+
+    .other-input-wrap.open {
+      max-height: 70px;
+      opacity: 1;
+      margin-top: 10px;
+    }
+
+    .text-input-line {
+      width: 100%;
+      padding: 10px 13px;
+      border-radius: 9px;
+      border: 1px solid rgba(246, 178, 109, 0.45);
+      background: rgba(13, 21, 38, 0.85);
+      color: var(--cream-light);
+      font-family: var(--font-sans);
+      font-size: 0.88rem;
+      outline: none;
+      transition: border-color 0.25s ease, box-shadow 0.25s ease;
+    }
+
+    .text-input-line::placeholder {
+      color: rgba(249, 236, 194, 0.38);
+    }
+
+    .text-input-line:focus {
+      border-color: var(--cream-light);
+      box-shadow: 0 0 12px rgba(246, 178, 109, 0.28);
+    }
+
+    /* ==========================================
+       Q8：5つの小さな炎（燈）オリジナル5段階評価
+       ・1〜5すべて同一サイズ・同一配置（拡大なし・常時揺れなし）
+       ・枠内に十分な余白を確保し、スマホ狭幅でも5つ横並びで整列
+       ・評価5を選択した瞬間のみ、控えめで上品な火の粉が舞う
+       ========================================== */
+    .flame-rating-stage {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      padding: 10px 2px 6px;
+    }
+
+    .flame-icons-row {
+      display: grid;
+      grid-template-columns: repeat(5, minmax(0, 56px));
+      justify-content: center;
+      gap: 9px;
+      width: 100%;
+      margin-bottom: 14px;
+      padding-top: 4px;
+    }
+
+    .flame-rate-btn {
+      --f-edge: rgba(249, 236, 194, 0.34);
+      --f-body: rgba(246, 178, 109, 0.26);
+      appearance: none;
+      background: rgba(15, 25, 44, 0.55);
+      border: 1px solid rgba(249, 236, 194, 0.18);
+      border-radius: 12px;
+      width: 100%;
+      height: 74px;
+      padding: 9px 6px 7px;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: space-between;
+      cursor: pointer;
+      transition:
+        background 0.32s var(--transition-smooth),
+        border-color 0.32s var(--transition-smooth),
+        box-shadow 0.32s var(--transition-smooth);
+      position: relative;
+      overflow: visible;
+    }
+
+    .flame-svg-wrap {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      width: 100%;
+      height: 38px;
+      pointer-events: none;
+    }
+
+    .flame-rate-svg {
+      width: 20px;
+      height: 35px;
+      display: block;
+      overflow: visible;
+      opacity: 0.85;
+      transition:
+        filter 0.32s ease,
+        opacity 0.32s ease;
+    }
+
+    .flame-rate-num {
+      font-size: 0.74rem;
+      color: var(--cream-muted);
+      line-height: 1;
+      transition: color 0.25s ease;
+      pointer-events: none;
+    }
+
+    /* 点灯時：クリームゴールドに変化し柔らかく点灯（サイズ・位置変化なし） */
+    .flame-rate-btn.ignited {
+      --f-edge: #fffdf5;
+      --f-body: url(#goldFlameBright);
+      background: radial-gradient(circle at 50% 38%, rgba(249, 236, 194, 0.22) 0%, rgba(246, 178, 109, 0.14) 65%, rgba(19, 30, 51, 0.45) 100%);
+      border-color: var(--amber-gold);
+      box-shadow:
+        0 0 14px rgba(246, 178, 109, 0.28),
+        inset 0 0 10px rgba(249, 236, 194, 0.14);
+    }
+
+    .flame-rate-btn.ignited .flame-rate-svg {
+      opacity: 1;
+      filter: drop-shadow(0 0 5px rgba(249, 236, 194, 0.72)) drop-shadow(0 0 10px rgba(246, 178, 109, 0.45));
+    }
+
+    .flame-rate-btn.ignited .flame-rate-num {
+      color: var(--cream-light);
+      font-weight: 700;
+    }
+
+    /* 評価5選択時のみ発生する、控えめで上品な火の粉 */
+    .btn-spark-particle {
+      position: absolute;
+      border-radius: 50%;
+      background: radial-gradient(circle, #fffdf5 0%, #f9ecc2 55%, rgba(246, 178, 109, 0.8) 100%);
+      box-shadow: 0 0 5px rgba(249, 236, 194, 0.85);
+      pointer-events: none;
+      z-index: 6;
+      animation: btnSparkFloat ease-out forwards;
+    }
+
+    .flame-status-text {
+      font-size: 0.85rem;
+      color: var(--amber-gold);
+      min-height: 1.5em;
+      letter-spacing: 0.08em;
+      text-align: center;
+      transition: opacity 0.25s ease;
+    }
+
+    /* ==========================================
+       Q9〜Q12：コンパクト自由記述（スマート伸縮型）
+       ========================================== */
+    .compact-textarea {
+      width: 100%;
+      min-height: 46px;
+      max-height: 180px;
+      padding: 11px 13px;
+      border-radius: 10px;
+      border: 1px solid rgba(249, 236, 194, 0.22);
+      background: rgba(13, 21, 38, 0.72);
+      color: var(--cream-light);
+      font-family: var(--font-sans);
+      font-size: 0.88rem;
+      line-height: 1.6;
+      resize: vertical;
+      outline: none;
+      transition: min-height 0.3s var(--transition-smooth), border-color 0.25s ease, box-shadow 0.25s ease, background 0.25s ease;
+    }
+
+    .compact-textarea::placeholder {
+      color: rgba(249, 236, 194, 0.36);
+      font-size: 0.82rem;
+    }
+
+    .compact-textarea:focus {
+      min-height: 92px;
+      background: rgba(13, 21, 38, 0.92);
+      border-color: var(--amber-gold);
+      box-shadow: 0 0 14px rgba(246, 178, 109, 0.22);
+    }
+
+    /* エラーメッセージバナー */
+    .validation-banner {
+      display: none;
+      padding: 11px 14px;
+      border-radius: 10px;
+      background: rgba(180, 53, 52, 0.28);
+      border: 1px solid var(--flame-orange);
+      color: var(--cream-light);
+      font-size: 0.82rem;
+      margin-top: 14px;
+      text-align: center;
+      animation: fadeStepIn 0.25s ease;
+    }
+
+    .validation-banner.show {
+      display: block;
+    }
+
+    /* 送信失敗時のエラー表示バナー（入力内容を保持したまま再試行を案内） */
+    .submit-error-banner {
+      display: none;
+      padding: 13px 15px;
+      border-radius: 10px;
+      background: rgba(160, 38, 38, 0.34);
+      border: 1px solid var(--flame-orange);
+      color: var(--cream-light);
+      font-size: 0.83rem;
+      line-height: 1.65;
+      margin-top: 14px;
+      text-align: left;
+      animation: fadeStepIn 0.25s ease;
+    }
+
+    .submit-error-banner.show {
+      display: block;
+    }
+
+    .submit-error-title {
+      font-weight: 700;
+      color: #ffd8c2;
+      margin-bottom: 4px;
+      display: block;
+    }
+
+    /* ステップ下部ナビゲーションボタン */
+    .step-nav-bar {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 12px;
+      margin-top: 22px;
+      padding-top: 14px;
+    }
+
+    .btn-back {
+      appearance: none;
+      background: rgba(249, 236, 194, 0.06);
+      border: 1px solid rgba(249, 236, 194, 0.24);
+      border-radius: 999px;
+      padding: 13px 20px;
+      color: var(--cream-muted);
+      font-family: var(--font-sans);
+      font-size: 0.88rem;
+      letter-spacing: 0.08em;
+      cursor: pointer;
+      transition: all 0.22s ease;
+      flex-shrink: 0;
+    }
+
+    .btn-back:hover:not(:disabled) {
+      border-color: var(--cream-light);
+      color: var(--cream-light);
+    }
+
+    .btn-back:disabled,
+    .btn-primary-flame:disabled {
+      opacity: 0.58;
+      cursor: not-allowed;
+      pointer-events: none;
+      transform: none;
+    }
+
+    .btn-next {
+      flex: 1;
+      min-width: 0;
+      max-width: 100%;
+      padding: 14px 16px;
+      font-size: 0.94rem;
+      letter-spacing: 0.06em;
+      white-space: nowrap;
+      word-break: keep-all;
+    }
+
+    @media (max-width: 420px) {
+      .step-nav-bar {
+        gap: 8px;
+      }
+      .btn-back {
+        padding: 13px 14px;
+        font-size: 0.82rem;
+        letter-spacing: 0.04em;
+      }
+      .btn-next {
+        padding: 13px 12px;
+        font-size: 0.88rem;
+        letter-spacing: 0.04em;
+        gap: 4px;
+      }
+    }
+
+    /* ==========================================
+       送信完了画面（完成版アニメーション v3 そのまま）
+       ========================================== */
+    body.is-completion-active {
+      overflow: hidden;
+      background: var(--bg-navy);
+      user-select: none;
+    }
+
+    body.is-completion-active.is-white-stage {
+      background: var(--bg-white);
+    }
+
+    body.is-completion-active .architectural-frame,
+    body.is-completion-active .app-shell {
+      display: none !important;
+    }
+
+    .completion-viewport {
+      position: fixed;
+      inset: 0;
+      width: 100%;
+      height: 100dvh;
+      display: none;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      padding: 24px 20px 84px;
+      overflow: hidden;
+      background-color: var(--bg-navy);
+      z-index: 100;
+    }
+
+    .completion-viewport.active-screen {
+      display: flex;
+    }
+
+    #effect-canvas {
+      position: absolute;
+      inset: 0;
+      width: 100%;
+      height: 100%;
+      z-index: 5;
+      pointer-events: none;
+    }
+
+    .completion-content {
+      position: relative;
+      z-index: 15;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      width: 100%;
+      max-width: 560px;
+      transform: translateY(-2vh);
+    }
+
+    /*
+      APNG表示用（iPhone/iPad）：WebM(video)と同じロゴ表示枠(16:9)いっぱいに重ねる。
+      960x540 は 16:9 のため、WebM(1920x1080)と位置・サイズが一致する。
+    */
+    #logo-apng-holder {
+      position: absolute;
+      inset: 0;
+      width: 100%;
+      height: 100%;
+      pointer-events: none;
+    }
+
+    .tomoshibi-logo-img {
+      position: absolute;
+      inset: 0;
+      width: 100%;
+      height: 100%;
+      object-fit: contain;
+      background: transparent;
+      pointer-events: none;
+      opacity: 0;
+      will-change: opacity;
+      -webkit-user-drag: none;
+      user-select: none;
+      -webkit-touch-callout: none;
+    }
+
+    /*
+      フォールバック用：公式ベクターSVGロゴ（炎と風のシンボルマークのみ・「燈」の文字は表示しない）
+    */
+    .tomoshibi-logo-svg-fallback {
+      position: absolute;
+      inset: 0;
+      width: 100%;
+      height: 100%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      pointer-events: none;
+      opacity: 0;
+      will-change: opacity;
+    }
+
+    .fallback-emblem-svg {
+      width: 32.5%;
+      height: auto;
+      max-height: 82%;
+      aspect-ratio: 169.47 / 167.32;
+      transform: translateY(-8.2%);
+      display: block;
+      pointer-events: none;
+      overflow: visible;
+    }
+
+    .logo-stage-anchor {
+      position: relative;
+      width: var(--logo-stage-width);
+      aspect-ratio: 16 / 9;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      pointer-events: none;
+      filter: none;
+      will-change: filter;
+    }
+
+    .tomoshibi-logo-video,
+    .tomoshibi-logo-freeze {
+      position: absolute;
+      inset: 0;
+      width: 100%;
+      height: 100%;
+      object-fit: contain;
+      background: transparent;
+      pointer-events: none;
+    }
+
+    .tomoshibi-logo-video {
+      opacity: 0;
+      will-change: opacity;
+    }
+
+    .tomoshibi-logo-freeze {
+      opacity: 0;
+      will-change: opacity;
+    }
+
+    .thankyou-message-block {
+      margin-top: calc(var(--logo-stage-width) * -0.145);
+      text-align: center;
+      padding: 0 12px;
+      opacity: 0;
+      transform: translateY(8px);
+      pointer-events: none;
+      will-change: opacity, transform;
+    }
+
+    .thankyou-message-block.visible {
+      pointer-events: auto;
+    }
+
+    .thankyou-heading {
+      font-family: var(--font-mincho);
+      font-size: clamp(1.22rem, 4.2vw, 1.56rem);
+      font-weight: 700;
+      color: var(--heading-color);
+      letter-spacing: 0.12em;
+      line-height: 1.5;
+      margin-bottom: 18px;
+    }
+
+    .thankyou-body {
+      font-family: var(--font-mincho);
+      font-size: clamp(0.86rem, 3.1vw, 1.0rem);
+      font-weight: 500;
+      color: var(--body-color);
+      letter-spacing: 0.06em;
+      line-height: 2.05;
+    }
+
+    /* フッター */
+    .fest-footer {
+      margin-top: auto;
+      padding-top: 26px;
+      text-align: center;
+      font-size: 0.72rem;
+      color: rgba(249, 236, 194, 0.42);
+      letter-spacing: 0.08em;
+    }
+
+    /* キーフレームアニメーション */
+    @keyframes coverReveal {
+      0% {
+        opacity: 0;
+        transform: translateY(14px) scale(0.98);
+      }
+      100% {
+        opacity: 1;
+        transform: translateY(0) scale(1);
+      }
+    }
+
+    @keyframes fadeStepIn {
+      0% {
+        opacity: 0;
+        transform: translateY(10px);
+      }
+      100% {
+        opacity: 1;
+        transform: translateY(0);
+      }
+    }
+
+    @keyframes subtleFlameFloat {
+      0%, 100% {
+        transform: translateY(0) scale(1);
+      }
+      50% {
+        transform: translateY(-4px) scale(1.02);
+      }
+    }
+
+    @keyframes btnSparkFloat {
+      0% {
+        transform: translate(0, 0) scale(0.6);
+        opacity: 0;
+      }
+      25% {
+        opacity: 0.85;
+      }
+      100% {
+        transform: translate(var(--sx, 5px), var(--sy, -22px)) scale(0.95);
+        opacity: 0;
+      }
+    }
+
+    @media (max-width: 520px) {
+      .completion-viewport {
+        padding: 16px 16px 96px;
+      }
+      .completion-content {
+        transform: translateY(-2.5vh);
+      }
+      .thankyou-message-block {
+        margin-top: calc(var(--logo-stage-width) * -0.135);
+      }
+      .thankyou-heading {
+        margin-bottom: 14px;
+      }
+    }
+
+    @media (max-width: 360px) {
+      .cover-fest-title {
+        font-size: 1.5rem;
+      }
+      .flame-icons-row {
+        gap: 6px;
+      }
+      .flame-rate-btn {
+        height: 70px;
+      }
+    }
+  
+    
+
+  </style>
+</head>
+<body>
+
+  <!-- 繊細な金色の細線フレーム -->
+  <div class="architectural-frame" aria-hidden="true"></div>
+
+  <!-- 共通SVG定義（公式ロゴベクター＆Q8黄金グラデーション・炎曲線） -->
+  <svg width="0" height="0" style="position:absolute;visibility:hidden;" aria-hidden="true">
+    <defs>
+      <!-- 選択時：クリームゴールド（#f9ecc2）グラデーション -->
+      <linearGradient id="goldFlameBright" x1="0%" y1="100%" x2="0%" y2="0%">
+        <stop offset="0%" stop-color="#f6b26d" />
+        <stop offset="55%" stop-color="#f9ecc2" />
+        <stop offset="100%" stop-color="#fff9e6" />
+      </linearGradient>
+
+      <!-- 4本の曲線で構成された炎アイコン（各曲線と隙間を維持・描画範囲 0 0 72.24 129.64 で左右中央揃え） -->
+      <symbol id="official-flame-curves" viewBox="0 0 72.24 129.64" preserveAspectRatio="xMidYMid meet">
+        <!-- 各曲線の左フチ極細ハイライト層 -->
+        <path fill="var(--f-edge)" d="M34.26,0.00C34.22,0.11 32.61,4.83 32.14,6.10C29.49,13.27 25.49,19.59 9.07,42.25C8.97,42.38 8.96,42.40 8.92,42.46C7.65,44.21 2.01,52.34 0.53,60.90C0.30,62.22 0.22,63.24 0.15,64.01C-0.46,70.59 0.95,75.81 1.54,77.76C3.15,83.07 5.92,87.23 8.13,90.22C7.05,86.29 5.90,80.59 7.09,73.74C8.05,68.26 9.98,64.40 12.49,59.48C17.48,49.72 20.37,47.07 24.49,40.76C25.28,39.55 26.97,36.91 28.34,34.31C30.19,30.80 32.44,25.35 33.32,18.62C33.55,16.83 33.62,14.61 33.74,10.15C33.85,5.95 34.30,2.46 34.26,0.00"/>
+        <path fill="var(--f-edge)" d="M46.08,15.62C45.97,18.47 45.19,23.10 43.32,28.41C40.04,37.78 35.34,41.21 24.99,56.57C19.78,64.30 17.14,68.27 15.41,73.39C12.03,83.42 13.35,91.01 13.69,92.80C14.96,99.37 17.77,103.91 21.06,107.66C20.31,104.70 18.71,100.62 19.17,95.59C19.43,92.68 20.12,89.10 22.34,83.62C24.34,78.66 26.23,75.54 34.10,63.17C41.80,51.07 43.12,49.15 44.66,44.90C46.94,38.63 47.41,33.63 47.54,31.47C47.94,25.03 47.21,19.50 46.08,15.62"/>
+        <path fill="var(--f-edge)" d="M55.89,28.56C56.42,29.99 57.03,32.08 57.32,34.62C57.32,34.62 57.56,38.39 56.94,42.33C55.55,51.05 45.75,66.61 42.15,71.49C33.03,83.84 30.82,90.65 28.90,97.75C28.05,100.93 27.28,104.93 27.65,109.81C28.01,114.56 29.34,118.30 31.05,121.01C31.37,116.85 31.91,112.31 34.00,107.30C38.52,96.45 42.89,92.33 51.81,78.39C61.36,63.47 62.16,56.93 62.53,54.11C63.56,46.34 61.97,40.82 61.04,38.21C59.59,34.12 57.57,30.85 55.89,28.56"/>
+        <path fill="var(--f-edge)" d="M41.79,118.24C48.75,106.71 52.33,104.60 59.39,93.58C64.40,85.76 68.13,79.83 70.19,71.28C72.24,62.80 71.35,57.09 70.84,54.60C69.87,49.87 68.36,45.96 66.85,43.31C67.55,45.94 67.92,49.56 67.92,53.74C67.92,57.23 67.46,60.73 66.38,64.68C64.15,72.85 60.51,78.53 55.45,86.98C52.61,91.73 48.39,98.91 43.35,107.98C41.59,111.12 39.63,114.80 38.19,119.02C36.86,122.90 36.02,128.03 36.16,129.64C37.41,127.08 38.88,123.06 41.79,118.24"/>
+        <!-- 4本の曲線メインボディ -->
+        <path fill="var(--f-body)" d="M34.26,0.00C34.22,0.11 33.04,5.12 32.57,6.39C29.92,13.55 26.24,19.59 9.83,42.25C9.73,42.38 9.71,42.40 9.68,42.45C8.41,44.21 2.77,52.34 1.28,60.90C1.06,62.22 0.98,63.24 0.91,64.01C0.30,70.59 1.71,75.80 2.30,77.76C3.91,83.07 6.16,87.56 8.36,90.56C7.29,86.62 6.66,80.59 7.85,73.74C8.81,68.26 10.74,64.40 13.25,59.48C18.24,49.72 21.13,47.07 25.25,40.76C26.04,39.55 27.73,36.91 29.10,34.31C30.95,30.80 33.19,25.35 34.08,18.62C34.31,16.83 34.37,14.60 34.50,10.15C34.61,5.95 34.30,2.46 34.26,0.00"/>
+        <path fill="var(--f-body)" d="M46.08,15.62C45.97,18.47 45.94,23.10 44.08,28.41C40.80,37.78 36.10,41.21 25.75,56.57C20.54,64.30 17.90,68.27 16.17,73.39C12.79,83.42 14.11,91.01 14.45,92.80C15.72,99.37 18.40,104.36 21.06,107.66C20.31,104.70 19.47,100.61 19.92,95.59C20.19,92.68 20.87,89.10 23.09,83.62C25.10,78.66 26.99,75.54 34.86,63.17C42.56,51.07 43.88,49.15 45.42,44.90C47.70,38.63 48.17,33.63 48.30,31.46C48.70,25.03 47.21,19.50 46.08,15.62"/>
+        <path fill="var(--f-body)" d="M55.89,28.56C56.42,29.99 57.79,32.08 58.08,34.61C58.08,34.61 58.32,38.39 57.69,42.33C56.31,51.05 46.50,66.61 42.90,71.49C33.79,83.83 31.58,90.65 29.66,97.75C28.80,100.93 28.04,104.93 28.41,109.81C28.76,114.55 29.56,118.44 31.05,121.01C31.37,116.85 32.67,112.31 34.76,107.29C39.28,96.44 43.64,92.33 52.57,78.39C62.12,63.47 62.91,56.93 63.29,54.11C64.32,46.33 62.73,40.82 61.80,38.21C60.35,34.12 57.70,30.85 55.89,28.56"/>
+        <path fill="var(--f-body)" d="M42.55,118.23C49.51,106.71 53.09,104.60 60.15,93.58C65.16,85.76 68.89,79.83 70.95,71.28C73.00,62.80 72.11,57.09 71.60,54.60C70.63,49.87 68.36,45.96 66.85,43.31C67.55,45.94 68.68,49.56 68.68,53.73C68.68,57.22 68.21,60.73 67.13,64.68C64.90,72.85 61.27,78.53 56.21,86.98C53.37,91.73 49.14,98.91 44.11,107.98C42.35,111.12 40.39,114.80 38.95,119.02C37.62,122.90 36.02,128.03 36.16,129.64C37.41,127.08 39.64,123.06 42.55,118.23"/>
+      </symbol>
+
+      <!-- 公式「炎のシンボルマーク」（大祭26_ロゴ.pdf より直接抽出） -->
+      <symbol id="logo-emblem" viewBox="0 0 169.47 167.32">
+        <path fill="#f6b26d" d="M20.89,67.98C21.03,68.05 21.19,67.93 21.15,67.79C20.27,63.84 19.21,55.93 23.70,49.21C27.52,43.49 33.56,41.49 45.50,37.71C55.83,34.44 64.06,33.27 74.47,31.84C84.22,30.50 90.59,29.62 99.36,29.57C108.80,29.51 117.36,30.44 124.83,31.79C125.30,31.88 125.50,31.23 125.06,31.06C119.62,28.89 112.77,26.68 104.69,25.20C94.25,23.30 86.10,23.41 79.10,23.54C68.27,23.74 60.29,25.01 53.25,26.16C37.54,28.72 30.16,31.66 27.35,32.84C17.10,37.16 14.48,40.60 13.46,42.14C12.69,43.30 8.19,50.08 11.08,57.94C13.43,64.35 19.13,67.21 20.89,67.98"/>
+        <path fill="#f9ecc2" d="M101.15,152.60C102.07,153.53 97.92,157.75 97.14,158.45C90.61,164.28 79.44,167.32 72.30,160.88C71.54,160.20 68.37,156.81 70.84,156.72C71.93,156.68 74.97,157.74 76.47,157.93C82.30,158.65 88.50,157.82 93.97,155.77C95.92,155.04 98.60,153.17 100.17,152.72C100.50,152.62 100.80,152.55 101.15,152.60"/>
+        <path fill="#f6b26d" d="M116.60,130.81C117.37,130.70 117.45,131.11 117.29,131.75C116.53,134.74 109.58,140.41 106.91,142.07C94.25,149.93 70.08,154.10 59.71,140.63C59.04,139.76 57.81,137.92 59.80,138.09C61.08,138.19 63.88,139.38 65.49,139.71C82.48,143.24 101.53,138.95 116.60,130.81"/>
+        <path fill="#b43534" d="M75.77,20.17C75.27,21.47 74.66,23.37 74.38,25.69C74.38,25.69 74.12,29.14 74.66,32.75C75.84,40.75 84.64,55.10 87.88,59.60C96.09,70.99 98.04,77.25 99.72,83.77C100.48,86.69 101.14,90.37 100.75,94.83C100.38,99.17 99.15,102.73 98.05,105.23C97.80,101.41 96.84,97.08 94.97,92.47C90.95,82.49 87.00,78.68 78.99,65.83C70.40,52.07 69.74,46.07 69.43,43.49C68.56,36.36 70.07,31.33 70.94,28.94C72.31,25.21 74.21,22.24 75.77,20.17"/>
+        <path fill="#b43534" d="M87.17,0.02C87.17,0.02 87.17,0.02 87.17,0.02C87.20,0.11 88.60,4.43 89.05,5.53C91.57,11.71 95.11,16.94 110.95,36.57C111.04,36.68 111.06,36.70 111.09,36.75C112.31,38.27 117.76,45.31 119.12,52.69C119.33,53.82 119.40,54.70 119.46,55.36C119.99,61.03 118.57,65.49 117.97,67.17C116.34,71.72 113.77,75.34 111.59,77.90C112.68,74.52 113.68,69.56 112.57,63.66C111.69,58.94 109.84,55.61 107.43,51.35C102.64,42.91 99.85,40.61 95.88,35.15C95.12,34.10 93.49,31.81 92.17,29.56C90.40,26.53 88.25,21.82 87.45,16.03C87.24,14.49 87.20,12.58 87.13,8.74C87.05,5.13 87.11,2.13 87.17,0.02"/>
+        <path fill="#b43534" d="M78.57,119.25C71.82,108.94 68.32,107.02 61.46,97.16C56.59,90.16 52.98,84.86 51.03,77.23C49.09,69.68 50.02,64.62 50.55,62.41C51.56,58.21 53.37,54.84 54.89,52.49C54.17,54.82 53.48,57.95 53.44,61.67C53.40,64.77 53.83,67.89 54.86,71.41C56.97,78.69 60.50,83.77 65.41,91.34C68.17,95.59 72.26,102.01 77.13,110.12C78.84,112.92 80.73,116.21 82.12,119.98C83.39,123.44 85.04,127.85 84.82,129.64C83.61,127.35 81.39,123.56 78.57,119.25"/>
+        <path fill="#f9ecc2" d="M82.92,0.00C82.92,0.00 82.92,0.00 82.92,0.00C82.88,0.11 81.27,4.83 80.80,6.10C78.15,13.27 74.15,19.59 57.73,42.25C57.63,42.38 57.62,42.40 57.58,42.46C56.31,44.21 50.67,52.34 49.19,60.90C48.96,62.22 48.88,63.24 48.81,64.01C48.20,70.59 49.61,75.81 50.20,77.76C51.81,83.07 54.58,87.23 56.79,90.22C55.71,86.29 54.56,80.59 55.75,73.74C56.71,68.26 58.64,64.40 61.15,59.48C66.14,49.72 69.03,47.07 73.15,40.76C73.94,39.55 75.63,36.91 77.00,34.31C78.85,30.80 81.10,25.35 81.98,18.62C82.21,16.83 82.28,14.61 82.40,10.15C82.51,5.95 82.96,2.46 82.92,0.00"/>
+        <path fill="#f9ecc2" d="M94.74,15.62C94.63,18.47 93.85,23.10 91.98,28.41C88.70,37.78 84.00,41.21 73.65,56.57C68.44,64.30 65.80,68.27 64.07,73.39C60.69,83.42 62.01,91.01 62.35,92.80C63.62,99.37 66.43,103.91 69.72,107.66C68.97,104.70 67.37,100.62 67.83,95.59C68.09,92.68 68.78,89.10 71.00,83.62C73.00,78.66 74.89,75.54 82.76,63.17C90.46,51.07 91.78,49.15 93.32,44.90C95.60,38.63 96.07,33.63 96.20,31.47C96.60,25.03 95.87,19.50 94.74,15.62"/>
+        <path fill="#f9ecc2" d="M104.55,28.56C105.08,29.99 105.69,32.08 105.98,34.62C105.98,34.62 106.22,38.39 105.60,42.33C104.21,51.05 94.41,66.61 90.81,71.49C81.69,83.84 79.48,90.65 77.56,97.75C76.71,100.93 75.94,104.93 76.31,109.81C76.67,114.56 78.00,118.30 79.71,121.01C80.03,116.85 80.57,112.31 82.66,107.30C87.18,96.45 91.55,92.33 100.47,78.39C110.02,63.47 110.82,56.93 111.19,54.11C112.22,46.34 110.63,40.82 109.70,38.21C108.25,34.12 106.23,30.85 104.55,28.56"/>
+        <path fill="#f9ecc2" d="M90.45,118.24C97.41,106.71 100.99,104.60 108.05,93.58C113.06,85.76 116.79,79.83 118.85,71.28C120.90,62.80 120.01,57.09 119.50,54.60C118.53,49.87 117.02,45.96 115.51,43.31C116.21,45.94 116.58,49.56 116.58,53.74C116.58,57.23 116.12,60.73 115.04,64.68C112.81,72.85 109.17,78.53 104.11,86.98C101.27,91.73 97.05,98.91 92.01,107.98C90.25,111.12 88.29,114.80 86.85,119.02C85.52,122.90 84.68,128.03 84.82,129.64C86.07,127.08 87.54,123.06 90.45,118.24"/>
+        <path fill="#ec6645" d="M82.92,0.00C82.92,0.00 82.92,0.00 82.92,0.00C82.88,0.11 81.70,5.12 81.23,6.39C78.58,13.55 74.90,19.59 58.49,42.25C58.39,42.38 58.37,42.40 58.34,42.45C57.07,44.21 51.43,52.34 49.94,60.90C49.72,62.22 49.64,63.24 49.57,64.01C48.96,70.59 50.37,75.80 50.96,77.76C52.57,83.07 54.82,87.56 57.02,90.56C55.95,86.62 55.32,80.59 56.51,73.74C57.47,68.26 59.40,64.40 61.91,59.48C66.90,49.72 69.79,47.07 73.91,40.76C74.70,39.55 76.39,36.91 77.76,34.31C79.61,30.80 81.85,25.35 82.74,18.62C82.97,16.83 83.03,14.60 83.16,10.15C83.27,5.95 82.96,2.46 82.92,0.00"/>
+        <path fill="#ec6645" d="M94.74,15.62C94.63,18.47 94.60,23.10 92.74,28.41C89.46,37.78 84.76,41.21 74.41,56.57C69.20,64.30 66.56,68.27 64.83,73.39C61.45,83.42 62.77,91.01 63.11,92.80C64.38,99.37 67.06,104.36 69.72,107.66C68.97,104.70 68.13,100.61 68.58,95.59C68.85,92.68 69.53,89.10 71.75,83.62C73.76,78.66 75.65,75.54 83.52,63.17C91.22,51.07 92.54,49.15 94.08,44.90C96.36,38.63 96.83,33.63 96.96,31.46C97.36,25.03 95.87,19.50 94.74,15.62"/>
+        <path fill="#ec6645" d="M104.55,28.56C105.08,29.99 106.45,32.08 106.74,34.61C106.74,34.61 106.98,38.39 106.35,42.33C104.97,51.05 95.16,66.61 91.56,71.49C82.45,83.83 80.24,90.65 78.32,97.75C77.46,100.93 76.70,104.93 77.07,109.81C77.42,114.55 78.22,118.44 79.71,121.01C80.03,116.85 81.33,112.31 83.42,107.29C87.94,96.44 92.30,92.33 101.23,78.39C110.78,63.47 111.57,56.93 111.95,54.11C112.98,46.33 111.39,40.82 110.46,38.21C109.01,34.12 106.36,30.85 104.55,28.56"/>
+        <path fill="#ec6645" d="M91.21,118.23C98.17,106.71 101.75,104.60 108.81,93.58C113.82,85.76 117.55,79.83 119.61,71.28C121.66,62.80 120.77,57.09 120.26,54.60C119.29,49.87 117.02,45.96 115.51,43.31C116.21,45.94 117.34,49.56 117.34,53.73C117.34,57.22 116.87,60.73 115.79,64.68C113.56,72.85 109.93,78.53 104.87,86.98C102.03,91.73 97.80,98.91 92.77,107.98C91.01,111.12 89.05,114.80 87.61,119.02C86.28,122.90 84.68,128.03 84.82,129.64C86.07,127.08 88.30,123.06 91.21,118.23"/>
+        <path fill="#f6b26d" d="M148.30,45.08C147.88,44.66 148.23,43.96 148.81,44.03C152.40,44.42 160.08,46.01 164.53,52.63C169.47,59.98 167.07,68.59 166.27,71.46C166.27,71.46 161.21,89.56 125.40,101.46C119.48,103.43 115.42,102.97 112.62,102.77C112.37,102.75 111.40,102.61 111.30,102.51C110.90,102.07 112.22,101.70 112.45,101.60C114.86,100.59 117.80,99.98 120.33,99.04C125.22,97.24 152.16,86.36 154.63,68.52C155.34,63.38 154.20,56.64 153.02,52.99C152.73,52.10 152.23,50.58 151.16,48.78C150.24,47.23 149.21,46.00 148.30,45.08"/>
+        <path fill="#f9ecc2" d="M57.93,98.06C63.85,99.19 69.16,100.02 75.19,100.81C77.48,101.11 81.59,101.20 83.69,101.50C85.33,101.73 82.79,102.71 82.35,102.82C55.73,109.47 20.33,102.82 4.02,73.47C2.27,70.33 0.16,64.52 0.07,60.67C0.07,60.36 0.00,59.52 0.46,59.75C10.92,78.20 29.58,89.66 48.15,95.57C49.85,96.04 51.50,96.55 53.27,97.00C54.81,97.39 56.42,97.71 57.93,98.06"/>
+        <path fill="#f9ecc2" d="M140.08,103.40C139.73,103.61 139.38,103.81 139.01,103.99C132.69,107.17 127.66,109.19 126.67,109.58C123.33,110.90 113.09,114.79 98.91,117.33C81.81,120.38 68.85,119.70 66.00,119.53C58.11,119.06 52.64,117.95 50.34,117.44C45.11,116.29 40.74,114.87 37.42,113.62C37.21,113.55 36.40,113.29 36.12,113.62C35.90,113.90 36.11,114.48 36.25,114.66C40.56,120.24 49.88,124.61 49.88,124.61C59.01,127.97 63.58,129.65 71.06,130.47C84.12,131.91 94.20,129.47 101.32,127.74C110.98,125.40 118.11,122.22 123.74,119.71C129.84,116.98 133.46,114.88 135.95,113.33C138.83,111.52 141.31,109.75 148.06,103.78C148.06,103.78 153.65,99.44 153.91,96.04C153.94,95.68 153.78,95.57 153.78,95.57C153.64,95.46 153.40,95.53 153.33,95.58Z"/>
+      </symbol>
+
+      <!-- 公式「燈」書道ロゴ（大祭26_ロゴ.pdf より直接抽出） -->
+      <symbol id="logo-kanji" viewBox="0 0 88.67 76.17">
+        <path fill="#f9ecc2" d="M63.28,14.84C66.41,15.89 68.88,16.80 70.70,17.58C72.00,16.80 72.91,15.50 73.44,13.67C72.91,13.15 72.39,12.76 71.88,12.50C69.27,13.28 66.41,14.06 63.28,14.84M53.12,27.74L55.86,27.34C58.98,27.09 61.06,26.70 62.11,26.17C64.19,24.87 66.02,23.44 67.58,21.88C63.93,19.53 61.19,17.97 59.38,17.19C58.07,20.31 55.99,23.83 53.12,27.74M55.86,43.36C52.99,43.62 50.52,42.97 48.44,41.41L49.61,42.97C50.39,44.79 51.95,46.75 54.30,48.83C56.90,48.31 60.02,47.92 63.67,47.66C65.49,46.36 67.05,44.79 68.36,42.97C69.14,42.19 69.14,41.54 68.36,41.02C63.15,42.32 58.98,43.10 55.86,43.36M77.34,38.67L79.69,41.02C80.21,41.54 80.21,42.58 79.69,44.14C78.91,45.19 77.34,46.62 75.00,48.44C76.04,49.48 76.04,50.52 75.00,51.56C67.97,51.82 61.19,52.22 54.69,52.74C53.38,56.12 50.78,55.60 46.88,51.17C45.83,49.61 45.44,47.53 45.70,44.92C45.70,43.36 45.83,41.80 46.09,40.24L50.78,39.45C56.25,37.63 61.33,36.59 66.02,36.33C69.92,36.07 73.69,36.85 77.34,38.67M75.78,58.99C76.56,60.81 72.78,64.20 64.45,69.14L66.41,68.75C71.35,68.49 76.30,68.88 81.25,69.92C83.07,70.70 84.50,71.88 85.55,73.44C86.06,73.96 86.06,74.48 85.55,75.00C81.12,74.74 74.47,74.48 65.62,74.22C56.51,75.00 48.83,75.65 42.58,76.17C39.71,76.17 37.89,74.87 37.11,72.27C38.41,71.75 39.97,71.49 41.80,71.49C43.36,71.23 44.79,71.09 46.09,71.09C47.39,70.84 48.69,70.57 50.00,70.31C48.18,69.01 47.00,67.06 46.48,64.45C47.27,60.03 47.66,56.77 47.66,54.69C48.69,54.95 49.61,55.60 50.39,56.64C51.17,58.73 51.69,60.42 51.95,61.72C54.03,60.16 55.99,58.99 57.81,58.20C57.03,59.77 56.25,61.46 55.47,63.28C54.94,64.84 54.30,67.06 53.52,69.92L54.69,69.53C58.33,66.41 61.06,63.94 62.89,62.11C64.19,60.55 65.62,58.59 67.19,56.25L65.62,55.08C65.10,54.82 64.58,54.56 64.06,54.30C65.10,53.78 66.41,53.52 67.97,53.52C71.88,54.04 74.47,55.86 75.78,58.99M61.72,0.00C63.80,0.00 65.23,1.04 66.02,3.12C65.75,3.91 65.36,5.08 64.84,6.64C63.80,9.25 62.63,11.72 61.33,14.06C66.02,11.20 68.75,8.34 69.53,5.47C69.01,4.43 68.10,3.39 66.80,2.34C68.10,2.34 69.27,2.61 70.31,3.12C73.96,4.17 76.17,6.12 76.95,8.99C76.43,10.03 75.65,10.81 74.61,11.33C76.69,12.11 78.52,13.42 80.08,15.24C80.60,16.02 80.47,16.93 79.69,17.97C78.64,19.01 77.73,19.79 76.95,20.31L79.30,21.88C81.38,23.18 83.07,24.35 84.38,25.39C85.41,25.92 86.58,27.22 87.89,29.30C88.67,30.60 88.41,31.90 87.11,33.20C84.77,33.47 81.77,32.17 78.12,29.30C75.00,26.95 72.52,25.26 70.70,24.22C69.14,25.00 67.31,25.65 65.23,26.17C67.05,26.44 68.62,26.95 69.92,27.74C70.70,28.00 71.35,28.65 71.88,29.69C71.09,30.47 69.79,31.12 67.97,31.64C61.72,32.95 57.16,34.25 54.30,35.55C52.47,36.33 50.91,36.72 49.61,36.72C51.95,34.64 53.64,33.07 54.69,32.03C53.64,31.51 52.47,31.12 51.17,30.86C45.18,36.07 40.49,39.32 37.11,40.62C35.28,41.41 34.24,41.54 33.98,41.02C41.53,33.20 45.83,27.61 46.88,24.22C42.44,22.14 39.32,18.75 37.50,14.06C40.10,14.59 42.31,15.11 44.14,15.62C46.22,16.67 47.91,17.84 49.22,19.14C51.04,15.50 52.21,12.89 52.73,11.33C50.39,10.81 48.30,10.03 46.48,8.99L43.36,6.25C42.31,4.95 41.66,3.91 41.41,3.12C46.61,3.65 50.39,3.65 52.73,3.12L58.98,0.00ZM27.73,6.64C28.52,8.73 28.91,12.50 28.91,17.97C29.16,19.53 29.16,21.09 28.91,22.66C32.55,22.66 36.06,23.70 39.45,25.78C40.49,26.31 41.02,27.09 41.02,28.12C41.02,29.69 40.62,30.86 39.84,31.64C34.89,30.60 31.25,29.04 28.91,26.95C27.60,36.07 26.56,42.19 25.78,45.31C31.51,47.40 35.68,50.39 38.28,54.30C39.32,55.86 39.84,57.95 39.84,60.55C39.32,62.63 38.02,63.28 35.94,62.50C32.81,59.64 29.81,56.51 26.95,53.12C25.91,52.34 25.00,51.56 24.22,50.78C22.91,54.69 21.35,57.95 19.53,60.55C14.32,68.36 7.81,72.79 0.00,73.83L3.52,70.70C8.46,63.94 12.11,57.16 14.45,50.39C17.05,44.92 19.01,36.98 20.31,26.56L19.14,28.12C16.27,30.99 14.19,34.51 12.89,38.67C12.11,40.76 11.19,41.80 10.16,41.80C6.77,40.76 5.08,37.89 5.08,33.20C6.12,28.78 6.90,25.13 7.42,22.27C7.94,22.79 8.46,23.44 8.98,24.22C10.02,26.31 10.80,28.12 11.33,29.69C14.71,27.34 17.83,25.65 20.70,24.61C21.22,22.53 21.48,19.40 21.48,15.24C21.48,12.11 21.35,10.16 21.09,9.38C20.57,8.34 19.53,7.42 17.97,6.64C17.19,6.12 16.66,5.73 16.41,5.47C17.19,4.43 18.10,3.91 19.14,3.91C20.18,3.65 21.48,3.52 23.05,3.52C25.39,3.52 26.95,4.56 27.73,6.64"/>
+      </symbol>
+    </defs>
+  </svg>
+
+  <main class="app-shell">
+
+    <!-- =================================================
+         画面0：扉ページ（パターンA：縦組みロゴ＋所要時間表記）
+         ================================================= -->
+    <section id="screen-cover">
+      <div class="test-mode-badge" role="status"><span class="test-badge-dot"></span><span>GitHub Pages 公開テスト版（回答保存なし）</span></div>
+      <div class="cover-logo-stage">
+        <svg class="cover-emblem-svg" viewBox="0 0 169.47 167.32" preserveAspectRatio="xMidYMid meet" aria-label="第77回津田沼祭 シンボルマーク">
+          <path fill="#f6b26d" d="M20.89,67.98C21.03,68.05 21.19,67.93 21.15,67.79C20.27,63.84 19.21,55.93 23.70,49.21C27.52,43.49 33.56,41.49 45.50,37.71C55.83,34.44 64.06,33.27 74.47,31.84C84.22,30.50 90.59,29.62 99.36,29.57C108.80,29.51 117.36,30.44 124.83,31.79C125.30,31.88 125.50,31.23 125.06,31.06C119.62,28.89 112.77,26.68 104.69,25.20C94.25,23.30 86.10,23.41 79.10,23.54C68.27,23.74 60.29,25.01 53.25,26.16C37.54,28.72 30.16,31.66 27.35,32.84C17.10,37.16 14.48,40.60 13.46,42.14C12.69,43.30 8.19,50.08 11.08,57.94C13.43,64.35 19.13,67.21 20.89,67.98"/>
+        <path fill="#f9ecc2" d="M101.15,152.60C102.07,153.53 97.92,157.75 97.14,158.45C90.61,164.28 79.44,167.32 72.30,160.88C71.54,160.20 68.37,156.81 70.84,156.72C71.93,156.68 74.97,157.74 76.47,157.93C82.30,158.65 88.50,157.82 93.97,155.77C95.92,155.04 98.60,153.17 100.17,152.72C100.50,152.62 100.80,152.55 101.15,152.60"/>
+        <path fill="#f6b26d" d="M116.60,130.81C117.37,130.70 117.45,131.11 117.29,131.75C116.53,134.74 109.58,140.41 106.91,142.07C94.25,149.93 70.08,154.10 59.71,140.63C59.04,139.76 57.81,137.92 59.80,138.09C61.08,138.19 63.88,139.38 65.49,139.71C82.48,143.24 101.53,138.95 116.60,130.81"/>
+        <path fill="#b43534" d="M75.77,20.17C75.27,21.47 74.66,23.37 74.38,25.69C74.38,25.69 74.12,29.14 74.66,32.75C75.84,40.75 84.64,55.10 87.88,59.60C96.09,70.99 98.04,77.25 99.72,83.77C100.48,86.69 101.14,90.37 100.75,94.83C100.38,99.17 99.15,102.73 98.05,105.23C97.80,101.41 96.84,97.08 94.97,92.47C90.95,82.49 87.00,78.68 78.99,65.83C70.40,52.07 69.74,46.07 69.43,43.49C68.56,36.36 70.07,31.33 70.94,28.94C72.31,25.21 74.21,22.24 75.77,20.17"/>
+        <path fill="#b43534" d="M87.17,0.02C87.17,0.02 87.17,0.02 87.17,0.02C87.20,0.11 88.60,4.43 89.05,5.53C91.57,11.71 95.11,16.94 110.95,36.57C111.04,36.68 111.06,36.70 111.09,36.75C112.31,38.27 117.76,45.31 119.12,52.69C119.33,53.82 119.40,54.70 119.46,55.36C119.99,61.03 118.57,65.49 117.97,67.17C116.34,71.72 113.77,75.34 111.59,77.90C112.68,74.52 113.68,69.56 112.57,63.66C111.69,58.94 109.84,55.61 107.43,51.35C102.64,42.91 99.85,40.61 95.88,35.15C95.12,34.10 93.49,31.81 92.17,29.56C90.40,26.53 88.25,21.82 87.45,16.03C87.24,14.49 87.20,12.58 87.13,8.74C87.05,5.13 87.11,2.13 87.17,0.02"/>
+        <path fill="#b43534" d="M78.57,119.25C71.82,108.94 68.32,107.02 61.46,97.16C56.59,90.16 52.98,84.86 51.03,77.23C49.09,69.68 50.02,64.62 50.55,62.41C51.56,58.21 53.37,54.84 54.89,52.49C54.17,54.82 53.48,57.95 53.44,61.67C53.40,64.77 53.83,67.89 54.86,71.41C56.97,78.69 60.50,83.77 65.41,91.34C68.17,95.59 72.26,102.01 77.13,110.12C78.84,112.92 80.73,116.21 82.12,119.98C83.39,123.44 85.04,127.85 84.82,129.64C83.61,127.35 81.39,123.56 78.57,119.25"/>
+        <path fill="#f9ecc2" d="M82.92,0.00C82.92,0.00 82.92,0.00 82.92,0.00C82.88,0.11 81.27,4.83 80.80,6.10C78.15,13.27 74.15,19.59 57.73,42.25C57.63,42.38 57.62,42.40 57.58,42.46C56.31,44.21 50.67,52.34 49.19,60.90C48.96,62.22 48.88,63.24 48.81,64.01C48.20,70.59 49.61,75.81 50.20,77.76C51.81,83.07 54.58,87.23 56.79,90.22C55.71,86.29 54.56,80.59 55.75,73.74C56.71,68.26 58.64,64.40 61.15,59.48C66.14,49.72 69.03,47.07 73.15,40.76C73.94,39.55 75.63,36.91 77.00,34.31C78.85,30.80 81.10,25.35 81.98,18.62C82.21,16.83 82.28,14.61 82.40,10.15C82.51,5.95 82.96,2.46 82.92,0.00"/>
+        <path fill="#f9ecc2" d="M94.74,15.62C94.63,18.47 93.85,23.10 91.98,28.41C88.70,37.78 84.00,41.21 73.65,56.57C68.44,64.30 65.80,68.27 64.07,73.39C60.69,83.42 62.01,91.01 62.35,92.80C63.62,99.37 66.43,103.91 69.72,107.66C68.97,104.70 67.37,100.62 67.83,95.59C68.09,92.68 68.78,89.10 71.00,83.62C73.00,78.66 74.89,75.54 82.76,63.17C90.46,51.07 91.78,49.15 93.32,44.90C95.60,38.63 96.07,33.63 96.20,31.47C96.60,25.03 95.87,19.50 94.74,15.62"/>
+        <path fill="#f9ecc2" d="M104.55,28.56C105.08,29.99 105.69,32.08 105.98,34.62C105.98,34.62 106.22,38.39 105.60,42.33C104.21,51.05 94.41,66.61 90.81,71.49C81.69,83.84 79.48,90.65 77.56,97.75C76.71,100.93 75.94,104.93 76.31,109.81C76.67,114.56 78.00,118.30 79.71,121.01C80.03,116.85 80.57,112.31 82.66,107.30C87.18,96.45 91.55,92.33 100.47,78.39C110.02,63.47 110.82,56.93 111.19,54.11C112.22,46.34 110.63,40.82 109.70,38.21C108.25,34.12 106.23,30.85 104.55,28.56"/>
+        <path fill="#f9ecc2" d="M90.45,118.24C97.41,106.71 100.99,104.60 108.05,93.58C113.06,85.76 116.79,79.83 118.85,71.28C120.90,62.80 120.01,57.09 119.50,54.60C118.53,49.87 117.02,45.96 115.51,43.31C116.21,45.94 116.58,49.56 116.58,53.74C116.58,57.23 116.12,60.73 115.04,64.68C112.81,72.85 109.17,78.53 104.11,86.98C101.27,91.73 97.05,98.91 92.01,107.98C90.25,111.12 88.29,114.80 86.85,119.02C85.52,122.90 84.68,128.03 84.82,129.64C86.07,127.08 87.54,123.06 90.45,118.24"/>
+        <path fill="#ec6645" d="M82.92,0.00C82.92,0.00 82.92,0.00 82.92,0.00C82.88,0.11 81.70,5.12 81.23,6.39C78.58,13.55 74.90,19.59 58.49,42.25C58.39,42.38 58.37,42.40 58.34,42.45C57.07,44.21 51.43,52.34 49.94,60.90C49.72,62.22 49.64,63.24 49.57,64.01C48.96,70.59 50.37,75.80 50.96,77.76C52.57,83.07 54.82,87.56 57.02,90.56C55.95,86.62 55.32,80.59 56.51,73.74C57.47,68.26 59.40,64.40 61.91,59.48C66.90,49.72 69.79,47.07 73.91,40.76C74.70,39.55 76.39,36.91 77.76,34.31C79.61,30.80 81.85,25.35 82.74,18.62C82.97,16.83 83.03,14.60 83.16,10.15C83.27,5.95 82.96,2.46 82.92,0.00"/>
+        <path fill="#ec6645" d="M94.74,15.62C94.63,18.47 94.60,23.10 92.74,28.41C89.46,37.78 84.76,41.21 74.41,56.57C69.20,64.30 66.56,68.27 64.83,73.39C61.45,83.42 62.77,91.01 63.11,92.80C64.38,99.37 67.06,104.36 69.72,107.66C68.97,104.70 68.13,100.61 68.58,95.59C68.85,92.68 69.53,89.10 71.75,83.62C73.76,78.66 75.65,75.54 83.52,63.17C91.22,51.07 92.54,49.15 94.08,44.90C96.36,38.63 96.83,33.63 96.96,31.46C97.36,25.03 95.87,19.50 94.74,15.62"/>
+        <path fill="#ec6645" d="M104.55,28.56C105.08,29.99 106.45,32.08 106.74,34.61C106.74,34.61 106.98,38.39 106.35,42.33C104.97,51.05 95.16,66.61 91.56,71.49C82.45,83.83 80.24,90.65 78.32,97.75C77.46,100.93 76.70,104.93 77.07,109.81C77.42,114.55 78.22,118.44 79.71,121.01C80.03,116.85 81.33,112.31 83.42,107.29C87.94,96.44 92.30,92.33 101.23,78.39C110.78,63.47 111.57,56.93 111.95,54.11C112.98,46.33 111.39,40.82 110.46,38.21C109.01,34.12 106.36,30.85 104.55,28.56"/>
+        <path fill="#ec6645" d="M91.21,118.23C98.17,106.71 101.75,104.60 108.81,93.58C113.82,85.76 117.55,79.83 119.61,71.28C121.66,62.80 120.77,57.09 120.26,54.60C119.29,49.87 117.02,45.96 115.51,43.31C116.21,45.94 117.34,49.56 117.34,53.73C117.34,57.22 116.87,60.73 115.79,64.68C113.56,72.85 109.93,78.53 104.87,86.98C102.03,91.73 97.80,98.91 92.77,107.98C91.01,111.12 89.05,114.80 87.61,119.02C86.28,122.90 84.68,128.03 84.82,129.64C86.07,127.08 88.30,123.06 91.21,118.23"/>
+        <path fill="#f6b26d" d="M148.30,45.08C147.88,44.66 148.23,43.96 148.81,44.03C152.40,44.42 160.08,46.01 164.53,52.63C169.47,59.98 167.07,68.59 166.27,71.46C166.27,71.46 161.21,89.56 125.40,101.46C119.48,103.43 115.42,102.97 112.62,102.77C112.37,102.75 111.40,102.61 111.30,102.51C110.90,102.07 112.22,101.70 112.45,101.60C114.86,100.59 117.80,99.98 120.33,99.04C125.22,97.24 152.16,86.36 154.63,68.52C155.34,63.38 154.20,56.64 153.02,52.99C152.73,52.10 152.23,50.58 151.16,48.78C150.24,47.23 149.21,46.00 148.30,45.08"/>
+        <path fill="#f9ecc2" d="M57.93,98.06C63.85,99.19 69.16,100.02 75.19,100.81C77.48,101.11 81.59,101.20 83.69,101.50C85.33,101.73 82.79,102.71 82.35,102.82C55.73,109.47 20.33,102.82 4.02,73.47C2.27,70.33 0.16,64.52 0.07,60.67C0.07,60.36 0.00,59.52 0.46,59.75C10.92,78.20 29.58,89.66 48.15,95.57C49.85,96.04 51.50,96.55 53.27,97.00C54.81,97.39 56.42,97.71 57.93,98.06"/>
+        <path fill="#f9ecc2" d="M140.08,103.40C139.73,103.61 139.38,103.81 139.01,103.99C132.69,107.17 127.66,109.19 126.67,109.58C123.33,110.90 113.09,114.79 98.91,117.33C81.81,120.38 68.85,119.70 66.00,119.53C58.11,119.06 52.64,117.95 50.34,117.44C45.11,116.29 40.74,114.87 37.42,113.62C37.21,113.55 36.40,113.29 36.12,113.62C35.90,113.90 36.11,114.48 36.25,114.66C40.56,120.24 49.88,124.61 49.88,124.61C59.01,127.97 63.58,129.65 71.06,130.47C84.12,131.91 94.20,129.47 101.32,127.74C110.98,125.40 118.11,122.22 123.74,119.71C129.84,116.98 133.46,114.88 135.95,113.33C138.83,111.52 141.31,109.75 148.06,103.78C148.06,103.78 153.65,99.44 153.91,96.04C153.94,95.68 153.78,95.57 153.78,95.57C153.64,95.46 153.40,95.53 153.33,95.58Z"/>
+        </svg>
+        <svg class="cover-kanji-svg" viewBox="0 0 88.67 76.17" preserveAspectRatio="xMidYMid meet" aria-label="燈">
+          <path fill="#f9ecc2" d="M63.28,14.84C66.41,15.89 68.88,16.80 70.70,17.58C72.00,16.80 72.91,15.50 73.44,13.67C72.91,13.15 72.39,12.76 71.88,12.50C69.27,13.28 66.41,14.06 63.28,14.84M53.12,27.74L55.86,27.34C58.98,27.09 61.06,26.70 62.11,26.17C64.19,24.87 66.02,23.44 67.58,21.88C63.93,19.53 61.19,17.97 59.38,17.19C58.07,20.31 55.99,23.83 53.12,27.74M55.86,43.36C52.99,43.62 50.52,42.97 48.44,41.41L49.61,42.97C50.39,44.79 51.95,46.75 54.30,48.83C56.90,48.31 60.02,47.92 63.67,47.66C65.49,46.36 67.05,44.79 68.36,42.97C69.14,42.19 69.14,41.54 68.36,41.02C63.15,42.32 58.98,43.10 55.86,43.36M77.34,38.67L79.69,41.02C80.21,41.54 80.21,42.58 79.69,44.14C78.91,45.19 77.34,46.62 75.00,48.44C76.04,49.48 76.04,50.52 75.00,51.56C67.97,51.82 61.19,52.22 54.69,52.74C53.38,56.12 50.78,55.60 46.88,51.17C45.83,49.61 45.44,47.53 45.70,44.92C45.70,43.36 45.83,41.80 46.09,40.24L50.78,39.45C56.25,37.63 61.33,36.59 66.02,36.33C69.92,36.07 73.69,36.85 77.34,38.67M75.78,58.99C76.56,60.81 72.78,64.20 64.45,69.14L66.41,68.75C71.35,68.49 76.30,68.88 81.25,69.92C83.07,70.70 84.50,71.88 85.55,73.44C86.06,73.96 86.06,74.48 85.55,75.00C81.12,74.74 74.47,74.48 65.62,74.22C56.51,75.00 48.83,75.65 42.58,76.17C39.71,76.17 37.89,74.87 37.11,72.27C38.41,71.75 39.97,71.49 41.80,71.49C43.36,71.23 44.79,71.09 46.09,71.09C47.39,70.84 48.69,70.57 50.00,70.31C48.18,69.01 47.00,67.06 46.48,64.45C47.27,60.03 47.66,56.77 47.66,54.69C48.69,54.95 49.61,55.60 50.39,56.64C51.17,58.73 51.69,60.42 51.95,61.72C54.03,60.16 55.99,58.99 57.81,58.20C57.03,59.77 56.25,61.46 55.47,63.28C54.94,64.84 54.30,67.06 53.52,69.92L54.69,69.53C58.33,66.41 61.06,63.94 62.89,62.11C64.19,60.55 65.62,58.59 67.19,56.25L65.62,55.08C65.10,54.82 64.58,54.56 64.06,54.30C65.10,53.78 66.41,53.52 67.97,53.52C71.88,54.04 74.47,55.86 75.78,58.99M61.72,0.00C63.80,0.00 65.23,1.04 66.02,3.12C65.75,3.91 65.36,5.08 64.84,6.64C63.80,9.25 62.63,11.72 61.33,14.06C66.02,11.20 68.75,8.34 69.53,5.47C69.01,4.43 68.10,3.39 66.80,2.34C68.10,2.34 69.27,2.61 70.31,3.12C73.96,4.17 76.17,6.12 76.95,8.99C76.43,10.03 75.65,10.81 74.61,11.33C76.69,12.11 78.52,13.42 80.08,15.24C80.60,16.02 80.47,16.93 79.69,17.97C78.64,19.01 77.73,19.79 76.95,20.31L79.30,21.88C81.38,23.18 83.07,24.35 84.38,25.39C85.41,25.92 86.58,27.22 87.89,29.30C88.67,30.60 88.41,31.90 87.11,33.20C84.77,33.47 81.77,32.17 78.12,29.30C75.00,26.95 72.52,25.26 70.70,24.22C69.14,25.00 67.31,25.65 65.23,26.17C67.05,26.44 68.62,26.95 69.92,27.74C70.70,28.00 71.35,28.65 71.88,29.69C71.09,30.47 69.79,31.12 67.97,31.64C61.72,32.95 57.16,34.25 54.30,35.55C52.47,36.33 50.91,36.72 49.61,36.72C51.95,34.64 53.64,33.07 54.69,32.03C53.64,31.51 52.47,31.12 51.17,30.86C45.18,36.07 40.49,39.32 37.11,40.62C35.28,41.41 34.24,41.54 33.98,41.02C41.53,33.20 45.83,27.61 46.88,24.22C42.44,22.14 39.32,18.75 37.50,14.06C40.10,14.59 42.31,15.11 44.14,15.62C46.22,16.67 47.91,17.84 49.22,19.14C51.04,15.50 52.21,12.89 52.73,11.33C50.39,10.81 48.30,10.03 46.48,8.99L43.36,6.25C42.31,4.95 41.66,3.91 41.41,3.12C46.61,3.65 50.39,3.65 52.73,3.12L58.98,0.00ZM27.73,6.64C28.52,8.73 28.91,12.50 28.91,17.97C29.16,19.53 29.16,21.09 28.91,22.66C32.55,22.66 36.06,23.70 39.45,25.78C40.49,26.31 41.02,27.09 41.02,28.12C41.02,29.69 40.62,30.86 39.84,31.64C34.89,30.60 31.25,29.04 28.91,26.95C27.60,36.07 26.56,42.19 25.78,45.31C31.51,47.40 35.68,50.39 38.28,54.30C39.32,55.86 39.84,57.95 39.84,60.55C39.32,62.63 38.02,63.28 35.94,62.50C32.81,59.64 29.81,56.51 26.95,53.12C25.91,52.34 25.00,51.56 24.22,50.78C22.91,54.69 21.35,57.95 19.53,60.55C14.32,68.36 7.81,72.79 0.00,73.83L3.52,70.70C8.46,63.94 12.11,57.16 14.45,50.39C17.05,44.92 19.01,36.98 20.31,26.56L19.14,28.12C16.27,30.99 14.19,34.51 12.89,38.67C12.11,40.76 11.19,41.80 10.16,41.80C6.77,40.76 5.08,37.89 5.08,33.20C6.12,28.78 6.90,25.13 7.42,22.27C7.94,22.79 8.46,23.44 8.98,24.22C10.02,26.31 10.80,28.12 11.33,29.69C14.71,27.34 17.83,25.65 20.70,24.61C21.22,22.53 21.48,19.40 21.48,15.24C21.48,12.11 21.35,10.16 21.09,9.38C20.57,8.34 19.53,7.42 17.97,6.64C17.19,6.12 16.66,5.73 16.41,5.47C17.19,4.43 18.10,3.91 19.14,3.91C20.18,3.65 21.48,3.52 23.05,3.52C25.39,3.52 26.95,4.56 27.73,6.64"/>
+        </svg>
+        <p class="cover-univ-sub">千葉工業大学 第 <span class="hl-amber">77</span> 回</p>
+        <h1 class="cover-fest-title">津田沼祭</h1>
+      </div>
+
+      <div class="cover-divider"></div>
+
+      <h2 class="cover-survey-heading">来場者アンケート</h2>
+      <p class="cover-lead">
+        ご来場いただきありがとうございます。<br>
+        皆さまの声を次なる「燈」へとつなげるため、<br>
+        アンケートへのご協力をお願いいたします。
+      </p>
+
+      <div class="time-badge">
+        <span class="time-badge-dot"></span>
+        <span>所要時間：約1分（全12問・選択中心）</span>
+      </div>
+
+      <button type="button" class="btn-primary-flame" id="btn-start-survey">
+        <span>アンケートをはじめる</span>
+        <span class="btn-arrow">→</span>
+      </button>
+    </section>
+
+    <!-- =================================================
+         画面1〜3：アンケート本編（STEP 1 / 3 〜 STEP 3 / 3）
+         ================================================= -->
+    <section id="screen-survey" aria-live="polite">
+      <!-- 上部ヘッダー（横組みコンパクトロゴ ＋ 案1：STEP番号と3つの光） -->
+      <header class="survey-header">
+        <div class="header-brand" id="btn-return-cover" title="トップへ戻る">
+          <svg class="header-emblem" viewBox="0 0 169.47 167.32" preserveAspectRatio="xMidYMid meet" aria-hidden="true">
+            <path fill="#f6b26d" d="M20.89,67.98C21.03,68.05 21.19,67.93 21.15,67.79C20.27,63.84 19.21,55.93 23.70,49.21C27.52,43.49 33.56,41.49 45.50,37.71C55.83,34.44 64.06,33.27 74.47,31.84C84.22,30.50 90.59,29.62 99.36,29.57C108.80,29.51 117.36,30.44 124.83,31.79C125.30,31.88 125.50,31.23 125.06,31.06C119.62,28.89 112.77,26.68 104.69,25.20C94.25,23.30 86.10,23.41 79.10,23.54C68.27,23.74 60.29,25.01 53.25,26.16C37.54,28.72 30.16,31.66 27.35,32.84C17.10,37.16 14.48,40.60 13.46,42.14C12.69,43.30 8.19,50.08 11.08,57.94C13.43,64.35 19.13,67.21 20.89,67.98"/>
+        <path fill="#f9ecc2" d="M101.15,152.60C102.07,153.53 97.92,157.75 97.14,158.45C90.61,164.28 79.44,167.32 72.30,160.88C71.54,160.20 68.37,156.81 70.84,156.72C71.93,156.68 74.97,157.74 76.47,157.93C82.30,158.65 88.50,157.82 93.97,155.77C95.92,155.04 98.60,153.17 100.17,152.72C100.50,152.62 100.80,152.55 101.15,152.60"/>
+        <path fill="#f6b26d" d="M116.60,130.81C117.37,130.70 117.45,131.11 117.29,131.75C116.53,134.74 109.58,140.41 106.91,142.07C94.25,149.93 70.08,154.10 59.71,140.63C59.04,139.76 57.81,137.92 59.80,138.09C61.08,138.19 63.88,139.38 65.49,139.71C82.48,143.24 101.53,138.95 116.60,130.81"/>
+        <path fill="#b43534" d="M75.77,20.17C75.27,21.47 74.66,23.37 74.38,25.69C74.38,25.69 74.12,29.14 74.66,32.75C75.84,40.75 84.64,55.10 87.88,59.60C96.09,70.99 98.04,77.25 99.72,83.77C100.48,86.69 101.14,90.37 100.75,94.83C100.38,99.17 99.15,102.73 98.05,105.23C97.80,101.41 96.84,97.08 94.97,92.47C90.95,82.49 87.00,78.68 78.99,65.83C70.40,52.07 69.74,46.07 69.43,43.49C68.56,36.36 70.07,31.33 70.94,28.94C72.31,25.21 74.21,22.24 75.77,20.17"/>
+        <path fill="#b43534" d="M87.17,0.02C87.17,0.02 87.17,0.02 87.17,0.02C87.20,0.11 88.60,4.43 89.05,5.53C91.57,11.71 95.11,16.94 110.95,36.57C111.04,36.68 111.06,36.70 111.09,36.75C112.31,38.27 117.76,45.31 119.12,52.69C119.33,53.82 119.40,54.70 119.46,55.36C119.99,61.03 118.57,65.49 117.97,67.17C116.34,71.72 113.77,75.34 111.59,77.90C112.68,74.52 113.68,69.56 112.57,63.66C111.69,58.94 109.84,55.61 107.43,51.35C102.64,42.91 99.85,40.61 95.88,35.15C95.12,34.10 93.49,31.81 92.17,29.56C90.40,26.53 88.25,21.82 87.45,16.03C87.24,14.49 87.20,12.58 87.13,8.74C87.05,5.13 87.11,2.13 87.17,0.02"/>
+        <path fill="#b43534" d="M78.57,119.25C71.82,108.94 68.32,107.02 61.46,97.16C56.59,90.16 52.98,84.86 51.03,77.23C49.09,69.68 50.02,64.62 50.55,62.41C51.56,58.21 53.37,54.84 54.89,52.49C54.17,54.82 53.48,57.95 53.44,61.67C53.40,64.77 53.83,67.89 54.86,71.41C56.97,78.69 60.50,83.77 65.41,91.34C68.17,95.59 72.26,102.01 77.13,110.12C78.84,112.92 80.73,116.21 82.12,119.98C83.39,123.44 85.04,127.85 84.82,129.64C83.61,127.35 81.39,123.56 78.57,119.25"/>
+        <path fill="#f9ecc2" d="M82.92,0.00C82.92,0.00 82.92,0.00 82.92,0.00C82.88,0.11 81.27,4.83 80.80,6.10C78.15,13.27 74.15,19.59 57.73,42.25C57.63,42.38 57.62,42.40 57.58,42.46C56.31,44.21 50.67,52.34 49.19,60.90C48.96,62.22 48.88,63.24 48.81,64.01C48.20,70.59 49.61,75.81 50.20,77.76C51.81,83.07 54.58,87.23 56.79,90.22C55.71,86.29 54.56,80.59 55.75,73.74C56.71,68.26 58.64,64.40 61.15,59.48C66.14,49.72 69.03,47.07 73.15,40.76C73.94,39.55 75.63,36.91 77.00,34.31C78.85,30.80 81.10,25.35 81.98,18.62C82.21,16.83 82.28,14.61 82.40,10.15C82.51,5.95 82.96,2.46 82.92,0.00"/>
+        <path fill="#f9ecc2" d="M94.74,15.62C94.63,18.47 93.85,23.10 91.98,28.41C88.70,37.78 84.00,41.21 73.65,56.57C68.44,64.30 65.80,68.27 64.07,73.39C60.69,83.42 62.01,91.01 62.35,92.80C63.62,99.37 66.43,103.91 69.72,107.66C68.97,104.70 67.37,100.62 67.83,95.59C68.09,92.68 68.78,89.10 71.00,83.62C73.00,78.66 74.89,75.54 82.76,63.17C90.46,51.07 91.78,49.15 93.32,44.90C95.60,38.63 96.07,33.63 96.20,31.47C96.60,25.03 95.87,19.50 94.74,15.62"/>
+        <path fill="#f9ecc2" d="M104.55,28.56C105.08,29.99 105.69,32.08 105.98,34.62C105.98,34.62 106.22,38.39 105.60,42.33C104.21,51.05 94.41,66.61 90.81,71.49C81.69,83.84 79.48,90.65 77.56,97.75C76.71,100.93 75.94,104.93 76.31,109.81C76.67,114.56 78.00,118.30 79.71,121.01C80.03,116.85 80.57,112.31 82.66,107.30C87.18,96.45 91.55,92.33 100.47,78.39C110.02,63.47 110.82,56.93 111.19,54.11C112.22,46.34 110.63,40.82 109.70,38.21C108.25,34.12 106.23,30.85 104.55,28.56"/>
+        <path fill="#f9ecc2" d="M90.45,118.24C97.41,106.71 100.99,104.60 108.05,93.58C113.06,85.76 116.79,79.83 118.85,71.28C120.90,62.80 120.01,57.09 119.50,54.60C118.53,49.87 117.02,45.96 115.51,43.31C116.21,45.94 116.58,49.56 116.58,53.74C116.58,57.23 116.12,60.73 115.04,64.68C112.81,72.85 109.17,78.53 104.11,86.98C101.27,91.73 97.05,98.91 92.01,107.98C90.25,111.12 88.29,114.80 86.85,119.02C85.52,122.90 84.68,128.03 84.82,129.64C86.07,127.08 87.54,123.06 90.45,118.24"/>
+        <path fill="#ec6645" d="M82.92,0.00C82.92,0.00 82.92,0.00 82.92,0.00C82.88,0.11 81.70,5.12 81.23,6.39C78.58,13.55 74.90,19.59 58.49,42.25C58.39,42.38 58.37,42.40 58.34,42.45C57.07,44.21 51.43,52.34 49.94,60.90C49.72,62.22 49.64,63.24 49.57,64.01C48.96,70.59 50.37,75.80 50.96,77.76C52.57,83.07 54.82,87.56 57.02,90.56C55.95,86.62 55.32,80.59 56.51,73.74C57.47,68.26 59.40,64.40 61.91,59.48C66.90,49.72 69.79,47.07 73.91,40.76C74.70,39.55 76.39,36.91 77.76,34.31C79.61,30.80 81.85,25.35 82.74,18.62C82.97,16.83 83.03,14.60 83.16,10.15C83.27,5.95 82.96,2.46 82.92,0.00"/>
+        <path fill="#ec6645" d="M94.74,15.62C94.63,18.47 94.60,23.10 92.74,28.41C89.46,37.78 84.76,41.21 74.41,56.57C69.20,64.30 66.56,68.27 64.83,73.39C61.45,83.42 62.77,91.01 63.11,92.80C64.38,99.37 67.06,104.36 69.72,107.66C68.97,104.70 68.13,100.61 68.58,95.59C68.85,92.68 69.53,89.10 71.75,83.62C73.76,78.66 75.65,75.54 83.52,63.17C91.22,51.07 92.54,49.15 94.08,44.90C96.36,38.63 96.83,33.63 96.96,31.46C97.36,25.03 95.87,19.50 94.74,15.62"/>
+        <path fill="#ec6645" d="M104.55,28.56C105.08,29.99 106.45,32.08 106.74,34.61C106.74,34.61 106.98,38.39 106.35,42.33C104.97,51.05 95.16,66.61 91.56,71.49C82.45,83.83 80.24,90.65 78.32,97.75C77.46,100.93 76.70,104.93 77.07,109.81C77.42,114.55 78.22,118.44 79.71,121.01C80.03,116.85 81.33,112.31 83.42,107.29C87.94,96.44 92.30,92.33 101.23,78.39C110.78,63.47 111.57,56.93 111.95,54.11C112.98,46.33 111.39,40.82 110.46,38.21C109.01,34.12 106.36,30.85 104.55,28.56"/>
+        <path fill="#ec6645" d="M91.21,118.23C98.17,106.71 101.75,104.60 108.81,93.58C113.82,85.76 117.55,79.83 119.61,71.28C121.66,62.80 120.77,57.09 120.26,54.60C119.29,49.87 117.02,45.96 115.51,43.31C116.21,45.94 117.34,49.56 117.34,53.73C117.34,57.22 116.87,60.73 115.79,64.68C113.56,72.85 109.93,78.53 104.87,86.98C102.03,91.73 97.80,98.91 92.77,107.98C91.01,111.12 89.05,114.80 87.61,119.02C86.28,122.90 84.68,128.03 84.82,129.64C86.07,127.08 88.30,123.06 91.21,118.23"/>
+        <path fill="#f6b26d" d="M148.30,45.08C147.88,44.66 148.23,43.96 148.81,44.03C152.40,44.42 160.08,46.01 164.53,52.63C169.47,59.98 167.07,68.59 166.27,71.46C166.27,71.46 161.21,89.56 125.40,101.46C119.48,103.43 115.42,102.97 112.62,102.77C112.37,102.75 111.40,102.61 111.30,102.51C110.90,102.07 112.22,101.70 112.45,101.60C114.86,100.59 117.80,99.98 120.33,99.04C125.22,97.24 152.16,86.36 154.63,68.52C155.34,63.38 154.20,56.64 153.02,52.99C152.73,52.10 152.23,50.58 151.16,48.78C150.24,47.23 149.21,46.00 148.30,45.08"/>
+        <path fill="#f9ecc2" d="M57.93,98.06C63.85,99.19 69.16,100.02 75.19,100.81C77.48,101.11 81.59,101.20 83.69,101.50C85.33,101.73 82.79,102.71 82.35,102.82C55.73,109.47 20.33,102.82 4.02,73.47C2.27,70.33 0.16,64.52 0.07,60.67C0.07,60.36 0.00,59.52 0.46,59.75C10.92,78.20 29.58,89.66 48.15,95.57C49.85,96.04 51.50,96.55 53.27,97.00C54.81,97.39 56.42,97.71 57.93,98.06"/>
+        <path fill="#f9ecc2" d="M140.08,103.40C139.73,103.61 139.38,103.81 139.01,103.99C132.69,107.17 127.66,109.19 126.67,109.58C123.33,110.90 113.09,114.79 98.91,117.33C81.81,120.38 68.85,119.70 66.00,119.53C58.11,119.06 52.64,117.95 50.34,117.44C45.11,116.29 40.74,114.87 37.42,113.62C37.21,113.55 36.40,113.29 36.12,113.62C35.90,113.90 36.11,114.48 36.25,114.66C40.56,120.24 49.88,124.61 49.88,124.61C59.01,127.97 63.58,129.65 71.06,130.47C84.12,131.91 94.20,129.47 101.32,127.74C110.98,125.40 118.11,122.22 123.74,119.71C129.84,116.98 133.46,114.88 135.95,113.33C138.83,111.52 141.31,109.75 148.06,103.78C148.06,103.78 153.65,99.44 153.91,96.04C153.94,95.68 153.78,95.57 153.78,95.57C153.64,95.46 153.40,95.53 153.33,95.58Z"/>
+          </svg>
+          <svg class="header-kanji" viewBox="0 0 88.67 76.17" preserveAspectRatio="xMidYMid meet" aria-hidden="true">
+            <path fill="#f9ecc2" d="M63.28,14.84C66.41,15.89 68.88,16.80 70.70,17.58C72.00,16.80 72.91,15.50 73.44,13.67C72.91,13.15 72.39,12.76 71.88,12.50C69.27,13.28 66.41,14.06 63.28,14.84M53.12,27.74L55.86,27.34C58.98,27.09 61.06,26.70 62.11,26.17C64.19,24.87 66.02,23.44 67.58,21.88C63.93,19.53 61.19,17.97 59.38,17.19C58.07,20.31 55.99,23.83 53.12,27.74M55.86,43.36C52.99,43.62 50.52,42.97 48.44,41.41L49.61,42.97C50.39,44.79 51.95,46.75 54.30,48.83C56.90,48.31 60.02,47.92 63.67,47.66C65.49,46.36 67.05,44.79 68.36,42.97C69.14,42.19 69.14,41.54 68.36,41.02C63.15,42.32 58.98,43.10 55.86,43.36M77.34,38.67L79.69,41.02C80.21,41.54 80.21,42.58 79.69,44.14C78.91,45.19 77.34,46.62 75.00,48.44C76.04,49.48 76.04,50.52 75.00,51.56C67.97,51.82 61.19,52.22 54.69,52.74C53.38,56.12 50.78,55.60 46.88,51.17C45.83,49.61 45.44,47.53 45.70,44.92C45.70,43.36 45.83,41.80 46.09,40.24L50.78,39.45C56.25,37.63 61.33,36.59 66.02,36.33C69.92,36.07 73.69,36.85 77.34,38.67M75.78,58.99C76.56,60.81 72.78,64.20 64.45,69.14L66.41,68.75C71.35,68.49 76.30,68.88 81.25,69.92C83.07,70.70 84.50,71.88 85.55,73.44C86.06,73.96 86.06,74.48 85.55,75.00C81.12,74.74 74.47,74.48 65.62,74.22C56.51,75.00 48.83,75.65 42.58,76.17C39.71,76.17 37.89,74.87 37.11,72.27C38.41,71.75 39.97,71.49 41.80,71.49C43.36,71.23 44.79,71.09 46.09,71.09C47.39,70.84 48.69,70.57 50.00,70.31C48.18,69.01 47.00,67.06 46.48,64.45C47.27,60.03 47.66,56.77 47.66,54.69C48.69,54.95 49.61,55.60 50.39,56.64C51.17,58.73 51.69,60.42 51.95,61.72C54.03,60.16 55.99,58.99 57.81,58.20C57.03,59.77 56.25,61.46 55.47,63.28C54.94,64.84 54.30,67.06 53.52,69.92L54.69,69.53C58.33,66.41 61.06,63.94 62.89,62.11C64.19,60.55 65.62,58.59 67.19,56.25L65.62,55.08C65.10,54.82 64.58,54.56 64.06,54.30C65.10,53.78 66.41,53.52 67.97,53.52C71.88,54.04 74.47,55.86 75.78,58.99M61.72,0.00C63.80,0.00 65.23,1.04 66.02,3.12C65.75,3.91 65.36,5.08 64.84,6.64C63.80,9.25 62.63,11.72 61.33,14.06C66.02,11.20 68.75,8.34 69.53,5.47C69.01,4.43 68.10,3.39 66.80,2.34C68.10,2.34 69.27,2.61 70.31,3.12C73.96,4.17 76.17,6.12 76.95,8.99C76.43,10.03 75.65,10.81 74.61,11.33C76.69,12.11 78.52,13.42 80.08,15.24C80.60,16.02 80.47,16.93 79.69,17.97C78.64,19.01 77.73,19.79 76.95,20.31L79.30,21.88C81.38,23.18 83.07,24.35 84.38,25.39C85.41,25.92 86.58,27.22 87.89,29.30C88.67,30.60 88.41,31.90 87.11,33.20C84.77,33.47 81.77,32.17 78.12,29.30C75.00,26.95 72.52,25.26 70.70,24.22C69.14,25.00 67.31,25.65 65.23,26.17C67.05,26.44 68.62,26.95 69.92,27.74C70.70,28.00 71.35,28.65 71.88,29.69C71.09,30.47 69.79,31.12 67.97,31.64C61.72,32.95 57.16,34.25 54.30,35.55C52.47,36.33 50.91,36.72 49.61,36.72C51.95,34.64 53.64,33.07 54.69,32.03C53.64,31.51 52.47,31.12 51.17,30.86C45.18,36.07 40.49,39.32 37.11,40.62C35.28,41.41 34.24,41.54 33.98,41.02C41.53,33.20 45.83,27.61 46.88,24.22C42.44,22.14 39.32,18.75 37.50,14.06C40.10,14.59 42.31,15.11 44.14,15.62C46.22,16.67 47.91,17.84 49.22,19.14C51.04,15.50 52.21,12.89 52.73,11.33C50.39,10.81 48.30,10.03 46.48,8.99L43.36,6.25C42.31,4.95 41.66,3.91 41.41,3.12C46.61,3.65 50.39,3.65 52.73,3.12L58.98,0.00ZM27.73,6.64C28.52,8.73 28.91,12.50 28.91,17.97C29.16,19.53 29.16,21.09 28.91,22.66C32.55,22.66 36.06,23.70 39.45,25.78C40.49,26.31 41.02,27.09 41.02,28.12C41.02,29.69 40.62,30.86 39.84,31.64C34.89,30.60 31.25,29.04 28.91,26.95C27.60,36.07 26.56,42.19 25.78,45.31C31.51,47.40 35.68,50.39 38.28,54.30C39.32,55.86 39.84,57.95 39.84,60.55C39.32,62.63 38.02,63.28 35.94,62.50C32.81,59.64 29.81,56.51 26.95,53.12C25.91,52.34 25.00,51.56 24.22,50.78C22.91,54.69 21.35,57.95 19.53,60.55C14.32,68.36 7.81,72.79 0.00,73.83L3.52,70.70C8.46,63.94 12.11,57.16 14.45,50.39C17.05,44.92 19.01,36.98 20.31,26.56L19.14,28.12C16.27,30.99 14.19,34.51 12.89,38.67C12.11,40.76 11.19,41.80 10.16,41.80C6.77,40.76 5.08,37.89 5.08,33.20C6.12,28.78 6.90,25.13 7.42,22.27C7.94,22.79 8.46,23.44 8.98,24.22C10.02,26.31 10.80,28.12 11.33,29.69C14.71,27.34 17.83,25.65 20.70,24.61C21.22,22.53 21.48,19.40 21.48,15.24C21.48,12.11 21.35,10.16 21.09,9.38C20.57,8.34 19.53,7.42 17.97,6.64C17.19,6.12 16.66,5.73 16.41,5.47C17.19,4.43 18.10,3.91 19.14,3.91C20.18,3.65 21.48,3.52 23.05,3.52C25.39,3.52 26.95,4.56 27.73,6.64"/>
+          </svg>
+          <div class="header-title-text">
+            第<span class="hl-amber">77</span>回津田沼祭<br>来場者アンケート
+            <div style="font-size: 0.65rem; color: var(--amber-gold); font-weight: 600; margin-top: 2px;">[公開テスト版]</div>
+          </div>
+        </div>
+
+        <div class="step-status-box">
+          <div class="step-number-label" id="step-label-text">STEP 1 / 3</div>
+          <div class="step-lights" aria-hidden="true">
+            <span class="step-light-node lit" id="light-node-1"></span>
+            <span class="step-light-line" id="light-line-1"></span>
+            <span class="step-light-node" id="light-node-2"></span>
+            <span class="step-light-line" id="light-line-2"></span>
+            <span class="step-light-node" id="light-node-3"></span>
+          </div>
+        </div>
+      </header>
+
+      <form id="tsudanuma-survey-form" onsubmit="return false;">
+
+        <!-- ==================== STEP 1 / 3 ==================== -->
+        <div class="step-panel active-step" data-step="1">
+
+          <!-- Q1. 年代（プルダウン） -->
+          <div class="q-card" id="card-q1">
+            <div class="q-head">
+              <div class="q-title-wrap">
+                <span class="q-num">Q1.</span>
+                <h3 class="q-title">年代を教えてください。</h3>
+              </div>
+              <span class="q-badge req">必須</span>
+            </div>
+            <div class="select-wrapper">
+              <select id="select-q1-age" class="dropdown-select" data-select-q="q1_age" aria-label="年代を選択してください">
+                <option value="" disabled selected>選択してください</option>
+                <option value="10代未満">10代未満</option>
+                <option value="10代">10代</option>
+                <option value="20代">20代</option>
+                <option value="30代">30代</option>
+                <option value="40代">40代</option>
+                <option value="50代">50代</option>
+                <option value="60代">60代</option>
+                <option value="70代以上">70代以上</option>
+              </select>
+            </div>
+          </div>
+
+          <!-- Q2. 性別（4択・自由入力廃止） -->
+          <div class="q-card" id="card-q2">
+            <div class="q-head">
+              <div class="q-title-wrap">
+                <span class="q-num">Q2.</span>
+                <h3 class="q-title">性別を教えてください。</h3>
+              </div>
+              <span class="q-badge req">必須</span>
+            </div>
+            <div class="options-grid-2" data-q="q2_gender" data-type="single">
+              <button type="button" class="opt-btn" data-val="男性"><span class="opt-indicator"></span><span>男性</span></button>
+              <button type="button" class="opt-btn" data-val="女性"><span class="opt-indicator"></span><span>女性</span></button>
+              <button type="button" class="opt-btn" data-val="その他"><span class="opt-indicator"></span><span>その他</span></button>
+              <button type="button" class="opt-btn" data-val="回答しない"><span class="opt-indicator"></span><span>回答しない</span></button>
+            </div>
+          </div>
+
+          <!-- Q3. 職業（プルダウン） -->
+          <div class="q-card" id="card-q3">
+            <div class="q-head">
+              <div class="q-title-wrap">
+                <span class="q-num">Q3.</span>
+                <h3 class="q-title">ご職業・ご所属を教えてください。</h3>
+              </div>
+              <span class="q-badge req">必須</span>
+            </div>
+
+            <div class="select-wrapper">
+              <select id="select-q3-occupation" class="dropdown-select" data-select-q="q3_occupation" data-other-wrap="wrap-q3-other" aria-label="ご職業・ご所属を選択してください">
+                <option value="" disabled selected>選択してください</option>
+                <optgroup label="学生">
+                  <option value="大学生・大学院生（千葉工業大学生）">千葉工業大学の学生（学部・院）</option>
+                  <option value="大学生・大学院生（他大学）">他大学の学生（学部・院）</option>
+                  <option value="専門学生">専門学生</option>
+                  <option value="高校生">高校生</option>
+                  <option value="中学生">中学生</option>
+                  <option value="小学生以下">小学生以下</option>
+                </optgroup>
+                <optgroup label="卒業生・教職員">
+                  <option value="本学の卒業生（OB・OG）">本学の卒業生（OB・OG）</option>
+                  <option value="本学の教職員">本学の教職員</option>
+                  <option value="他大学の教職員">他大学の教職員</option>
+                </optgroup>
+                <optgroup label="社会人・その他">
+                  <option value="会社員">会社員</option>
+                  <option value="公務員（教職員を除く）">公務員</option>
+                  <option value="自営業">自営業</option>
+                  <option value="アルバイト・パート">アルバイト・パート</option>
+                  <option value="その他">その他</option>
+                </optgroup>
+              </select>
+            </div>
+
+            <div class="other-input-wrap" id="wrap-q3-other">
+              <input type="text" class="text-input-line" id="input-q3-other" placeholder="ご職業・ご所属をご入力ください" />
+            </div>
+          </div>
+
+          <div class="validation-banner" id="err-step-1">未回答の必須項目があります。黄色い枠の質問をご確認ください。</div>
+
+          <div class="step-nav-bar">
+            <button type="button" class="btn-back" id="btn-step1-back">扉へ戻る</button>
+            <button type="button" class="btn-primary-flame btn-next" id="btn-to-step2">
+              <span>次へ進む（2 / 3）</span>
+              <span class="btn-arrow">→</span>
+            </button>
+          </div>
+        </div>
+
+        <!-- ==================== STEP 2 / 3 ==================== -->
+        <div class="step-panel" data-step="2">
+
+          <!-- Q4. 交通手段（複数選択） -->
+          <div class="q-card" id="card-q4">
+            <div class="q-head">
+              <div class="q-title-wrap">
+                <span class="q-num">Q4.</span>
+                <h3 class="q-title">ご来場の交通手段を教えてください。</h3>
+              </div>
+              <span class="q-badge req">必須</span>
+            </div>
+            <p class="q-subnote">※当てはまるものをすべてお選びください（複数選択可）</p>
+            <div class="options-grid-2" data-q="q4_transport" data-type="multi" data-other-wrap="wrap-q4-other">
+              <button type="button" class="opt-btn" data-multi="true" data-val="徒歩"><span class="opt-indicator"></span><span>徒歩</span></button>
+              <button type="button" class="opt-btn" data-multi="true" data-val="電車"><span class="opt-indicator"></span><span>電車</span></button>
+              <button type="button" class="opt-btn" data-multi="true" data-val="バス"><span class="opt-indicator"></span><span>バス</span></button>
+              <button type="button" class="opt-btn" data-multi="true" data-val="自転車"><span class="opt-indicator"></span><span>自転車</span></button>
+              <button type="button" class="opt-btn" data-multi="true" data-val="車"><span class="opt-indicator"></span><span>車</span></button>
+              <button type="button" class="opt-btn" data-multi="true" data-val="その他"><span class="opt-indicator"></span><span>その他</span></button>
+            </div>
+            <div class="other-input-wrap" id="wrap-q4-other">
+              <input type="text" class="text-input-line" id="input-q4-other" placeholder="その他の交通手段をご入力ください" />
+            </div>
+          </div>
+
+          <!-- Q5. 誰と来ましたか？（単一選択） -->
+          <div class="q-card" id="card-q5">
+            <div class="q-head">
+              <div class="q-title-wrap">
+                <span class="q-num">Q5.</span>
+                <h3 class="q-title">どなたとご来場されましたか？</h3>
+              </div>
+              <span class="q-badge req">必須</span>
+            </div>
+            <div class="options-chips" data-q="q5_companion" data-type="single" data-other-wrap="wrap-q5-other">
+              <button type="button" class="opt-btn" data-val="1人"><span class="opt-indicator"></span><span>1人</span></button>
+              <button type="button" class="opt-btn" data-val="友人・恋人"><span class="opt-indicator"></span><span>友人・恋人</span></button>
+              <button type="button" class="opt-btn" data-val="家族・親戚"><span class="opt-indicator"></span><span>家族・親戚</span></button>
+              <button type="button" class="opt-btn" data-val="職場の人"><span class="opt-indicator"></span><span>職場の人</span></button>
+              <button type="button" class="opt-btn" data-val="その他"><span class="opt-indicator"></span><span>その他</span></button>
+            </div>
+            <div class="other-input-wrap" id="wrap-q5-other">
+              <input type="text" class="text-input-line" id="input-q5-other" placeholder="ご一緒に来場された方をご入力ください" />
+            </div>
+          </div>
+
+          <!-- Q6. 何で知りましたか？（複数選択・3グループ整理） -->
+          <div class="q-card" id="card-q6">
+            <div class="q-head">
+              <div class="q-title-wrap">
+                <span class="q-num">Q6.</span>
+                <h3 class="q-title">第<span class="hl-amber">77</span>回津田沼祭を何で知りましたか？</h3>
+              </div>
+              <span class="q-badge req">必須</span>
+            </div>
+            <p class="q-subnote">※当てはまるものをすべてお選びください（複数選択可）</p>
+
+            <div data-q="q6_channel" data-type="multi" data-other-wrap="wrap-q6-other">
+              <div class="cat-group-label">ポスター・看板・チラシ</div>
+              <div class="options-chips">
+                <button type="button" class="opt-btn" data-multi="true" data-val="大学内のポスター"><span class="opt-indicator"></span><span>大学内のポスター</span></button>
+                <button type="button" class="opt-btn" data-multi="true" data-val="駅構内のポスター"><span class="opt-indicator"></span><span>駅構内のポスター</span></button>
+                <button type="button" class="opt-btn" data-multi="true" data-val="地域のポスター"><span class="opt-indicator"></span><span>地域のポスター</span></button>
+                <button type="button" class="opt-btn" data-multi="true" data-val="大型看板"><span class="opt-indicator"></span><span>大型看板</span></button>
+                <button type="button" class="opt-btn" data-multi="true" data-val="津田沼駅前歩道橋の横断幕"><span class="opt-indicator"></span><span>津田沼駅前歩道橋の横断幕</span></button>
+                <button type="button" class="opt-btn" data-multi="true" data-val="チラシ"><span class="opt-indicator"></span><span>チラシ</span></button>
+              </div>
+
+              <div class="cat-group-label">Web・SNS</div>
+              <div class="options-chips">
+                <button type="button" class="opt-btn" data-multi="true" data-val="X（旧Twitter）"><span class="opt-indicator"></span><span>X（旧Twitter）</span></button>
+                <button type="button" class="opt-btn" data-multi="true" data-val="Instagram"><span class="opt-indicator"></span><span>Instagram</span></button>
+                <button type="button" class="opt-btn" data-multi="true" data-val="第77回津田沼祭HP"><span class="opt-indicator"></span><span>第77回津田沼祭HP</span></button>
+                <button type="button" class="opt-btn" data-multi="true" data-val="CITポータル"><span class="opt-indicator"></span><span>CITポータル</span></button>
+              </div>
+
+              <div class="cat-group-label">口コミ・その他</div>
+              <div class="options-chips">
+                <button type="button" class="opt-btn" data-multi="true" data-val="友人から聞いた"><span class="opt-indicator"></span><span>友人から聞いた</span></button>
+                <button type="button" class="opt-btn" data-multi="true" data-val="学校で聞いた"><span class="opt-indicator"></span><span>学校で聞いた</span></button>
+                <button type="button" class="opt-btn" data-multi="true" data-val="たまたま通りがかり"><span class="opt-indicator"></span><span>たまたま通りがかり</span></button>
+                <button type="button" class="opt-btn" data-multi="true" data-val="その他"><span class="opt-indicator"></span><span>その他</span></button>
+              </div>
+            </div>
+
+            <div class="other-input-wrap" id="wrap-q6-other">
+              <input type="text" class="text-input-line" id="input-q6-other" placeholder="知ったきっかけをご入力ください" />
+            </div>
+          </div>
+
+          <!-- Q7. 来場目的（複数選択） -->
+          <div class="q-card" id="card-q7">
+            <div class="q-head">
+              <div class="q-title-wrap">
+                <span class="q-num">Q7.</span>
+                <h3 class="q-title">ご来場いただいた目的を教えてください。</h3>
+              </div>
+              <span class="q-badge req">必須</span>
+            </div>
+            <p class="q-subnote">※当てはまるものをすべてお選びください（複数選択可）</p>
+
+            <div class="options-chips" data-q="q7_purpose" data-type="multi" data-other-wrap="wrap-q7-other">
+              <button type="button" class="opt-btn" data-multi="true" data-val="サークルの発表・展示"><span class="opt-indicator"></span><span>サークルの発表・展示</span></button>
+              <button type="button" class="opt-btn" data-multi="true" data-val="ステージ発表"><span class="opt-indicator"></span><span>ステージ発表</span></button>
+              <button type="button" class="opt-btn" data-multi="true" data-val="模擬店"><span class="opt-indicator"></span><span>模擬店</span></button>
+              <button type="button" class="opt-btn" data-multi="true" data-val="ロボットコンテスト"><span class="opt-indicator"></span><span>ロボットコンテスト</span></button>
+              <button type="button" class="opt-btn" data-multi="true" data-val="ちびっこてづくり教室"><span class="opt-indicator"></span><span>ちびっこてづくり教室</span></button>
+              <button type="button" class="opt-btn" data-multi="true" data-val="謎解き脱出ゲーム"><span class="opt-indicator"></span><span>謎解き脱出ゲーム</span></button>
+              <button type="button" class="opt-btn" data-multi="true" data-val="ビンゴ大会"><span class="opt-indicator"></span><span>ビンゴ大会</span></button>
+              <button type="button" class="opt-btn" data-multi="true" data-val="アニソンライブ！ in津田沼祭2026-燈-"><span class="opt-indicator"></span><span>アニソンライブ！ in津田沼祭2026-燈-</span></button>
+              <button type="button" class="opt-btn" data-multi="true" data-val="千葉工業大学に興味があった"><span class="opt-indicator"></span><span>千葉工業大学に興味があった</span></button>
+              <button type="button" class="opt-btn" data-multi="true" data-val="その他"><span class="opt-indicator"></span><span>その他</span></button>
+            </div>
+
+            <div class="other-input-wrap" id="wrap-q7-other">
+              <input type="text" class="text-input-line" id="input-q7-other" placeholder="その他の目的をご入力ください" />
+            </div>
+          </div>
+
+          <div class="validation-banner" id="err-step-2">未回答の必須項目があります。黄色い枠の質問をご確認ください。</div>
+
+          <div class="step-nav-bar">
+            <button type="button" class="btn-back" id="btn-to-step1">← 戻る</button>
+            <button type="button" class="btn-primary-flame btn-next" id="btn-to-step3">
+              <span>次へ進む（3 / 3）</span>
+              <span class="btn-arrow">→</span>
+            </button>
+          </div>
+        </div>
+
+        <!-- ==================== STEP 3 / 3 ==================== -->
+        <div class="step-panel" data-step="3">
+
+          <!-- Q8. 満足度（5つの小さな炎がボッと温かく灯るオリジナル5段階評価） -->
+          <div class="q-card" id="card-q8">
+            <div class="q-head">
+              <div class="q-title-wrap">
+                <span class="q-num">Q8.</span>
+                <h3 class="q-title">第<span class="hl-amber">77</span>回津田沼祭の満足度を教えてください。</h3>
+              </div>
+              <span class="q-badge req">必須</span>
+            </div>
+            <p class="q-subnote">※1（不満）〜 5（大変満足）の「燈」をタップしてください</p>
+
+            <div class="flame-rating-stage">
+              <div class="flame-icons-row" id="flame-rating-group" role="radiogroup" aria-label="満足度5段階評価">
+                <!-- 形B（公式ロゴの炎曲線）・1〜5すべて同一サイズ＆左右中央揃え -->
+                <button type="button" class="flame-rate-btn" data-rate="1" aria-label="1: 不満">
+                  <div class="flame-svg-wrap">
+                    <svg class="flame-rate-svg"><use href="#official-flame-curves"></use></svg>
+                  </div>
+                  <span class="flame-rate-num">1</span>
+                </button>
+                <button type="button" class="flame-rate-btn" data-rate="2" aria-label="2: やや不満">
+                  <div class="flame-svg-wrap">
+                    <svg class="flame-rate-svg"><use href="#official-flame-curves"></use></svg>
+                  </div>
+                  <span class="flame-rate-num">2</span>
+                </button>
+                <button type="button" class="flame-rate-btn" data-rate="3" aria-label="3: 普通">
+                  <div class="flame-svg-wrap">
+                    <svg class="flame-rate-svg"><use href="#official-flame-curves"></use></svg>
+                  </div>
+                  <span class="flame-rate-num">3</span>
+                </button>
+                <button type="button" class="flame-rate-btn" data-rate="4" aria-label="4: 満足">
+                  <div class="flame-svg-wrap">
+                    <svg class="flame-rate-svg"><use href="#official-flame-curves"></use></svg>
+                  </div>
+                  <span class="flame-rate-num">4</span>
+                </button>
+                <button type="button" class="flame-rate-btn" data-rate="5" aria-label="5: 大変満足">
+                  <div class="flame-svg-wrap">
+                    <svg class="flame-rate-svg"><use href="#official-flame-curves"></use></svg>
+                  </div>
+                  <span class="flame-rate-num">5</span>
+                </button>
+              </div>
+              <div class="flame-status-text" id="flame-rating-label">タップして選択してください</div>
+            </div>
+          </div>
+
+          <!-- Q9. 印象に残った企画等（任意・コンパクト表示） -->
+          <div class="q-card">
+            <div class="q-head">
+              <div class="q-title-wrap">
+                <span class="q-num">Q9.</span>
+                <h3 class="q-title">印象に残った企画・展示・模擬店などを教えてください。</h3>
+              </div>
+              <span class="q-badge opt">任意</span>
+            </div>
+            <textarea class="compact-textarea" id="q9_impressive" rows="1" placeholder="例：〇〇サークルの展示、ステージ発表など（タップで広がります）"></textarea>
+          </div>
+
+          <!-- Q10. 感想（任意・コンパクト表示） -->
+          <div class="q-card">
+            <div class="q-head">
+              <div class="q-title-wrap">
+                <span class="q-num">Q10.</span>
+                <h3 class="q-title">津田沼祭全体のご感想をお聞かせください。</h3>
+              </div>
+              <span class="q-badge opt">任意</span>
+            </div>
+            <textarea class="compact-textarea" id="q10_impression" rows="1" placeholder="ひとことでも大歓迎です（タップで広がります）"></textarea>
+          </div>
+
+          <!-- Q11. 今後の要望（任意・コンパクト表示） -->
+          <div class="q-card">
+            <div class="q-head">
+              <div class="q-title-wrap">
+                <span class="q-num">Q11.</span>
+                <h3 class="q-title">今後の津田沼祭へのご要望・改善点があれば教えてください。</h3>
+              </div>
+              <span class="q-badge opt">任意</span>
+            </div>
+            <textarea class="compact-textarea" id="q11_request" rows="1" placeholder="案内表示、休憩スペース、企画内容など（タップで広がります）"></textarea>
+          </div>
+
+          <!-- Q12. 開催してほしいイベント（任意・コンパクト表示） -->
+          <div class="q-card">
+            <div class="q-head">
+              <div class="q-title-wrap">
+                <span class="q-num">Q12.</span>
+                <h3 class="q-title">今後開催してほしい企画・イベントがあれば教えてください。</h3>
+              </div>
+              <span class="q-badge opt">任意</span>
+            </div>
+            <textarea class="compact-textarea" id="q12_future_event" rows="1" placeholder="呼んでほしいゲスト、体験したい企画など（タップで広がります）"></textarea>
+          </div>
+
+          <div class="validation-banner" id="err-step-3">Q8（満足度）の「燈」をタップして選択してください。</div>
+
+          <!-- 送信失敗時のエラーメッセージ（入力内容は保持し再試行可能） -->
+          <div class="submit-error-banner" id="submit-error-banner" role="alert" aria-live="assertive">
+            <span class="submit-error-title">送信できませんでした</span>
+            <span id="submit-error-message">通信環境をご確認のうえ、もう一度「回答を送信する」を押してください。（ご入力内容は保持されています）</span>
+          </div>
+
+          <div class="test-notice-card">
+            <div class="test-notice-title">💡 本画面は公開テスト版です</div>
+            <div class="test-notice-text">
+              入力チェックおよび演出確認を行うテスト版です。ボタンを押してもGoogleスプレッドシートへの保存・送信は行われません。
+            </div>
+          </div>
+
+          <div class="step-nav-bar">
+            <button type="button" class="btn-back" id="btn-to-step2-back">← 戻る</button>
+            <button type="button" class="btn-primary-flame btn-next" id="btn-submit-survey">
+              <span id="submit-btn-text">テスト完了・演出確認（保存なし）</span>
+              <span class="btn-arrow" id="submit-btn-icon">✦</span>
+            </button>
+          </div>
+        </div>
+
+      </form>
+    </section>
+
+    <footer class="fest-footer">
+      千葉工業大学 第77回津田沼祭実行委員会
+    </footer>
+
+  </main>
+
+  <!-- =================================================
+       送信完了画面（完成版アニメーション v3 と完全同一・操作ボタンなし）
+       ================================================= -->
+  <section id="screen-Complete" class="completion-viewport" aria-live="polite">
+
+    
+
+    <!-- 背景移行・穏やかに昇り続ける元のCの光・背景への溶け込み描画Canvas -->
+    <canvas id="effect-canvas"></canvas>
+
+    <!-- 中央コンテンツ（ロゴ＋感謝メッセージ：位置・サイズ完全固定） -->
+    <div class="completion-content">
+      <!-- 公式ロゴ（画面中央より少し上に固定） -->
+      <div class="logo-stage-anchor" id="logo-anchor">
+        <!-- WebM（PC・Android用）。iPhone/iPadでは非表示のまま src も設定しない（黒い四角防止） -->
+        <video
+          id="logo-video"
+          class="tomoshibi-logo-video"
+          muted
+          playsinline
+          webkit-playsinline
+          preload="auto"
+        ></video>
+        <canvas id="logo-freeze-canvas" class="tomoshibi-logo-freeze"></canvas>
+
+        <!-- APNG（iPhone/iPad用）：再生開始時に <img> を動的生成して挿入する -->
+        <div id="logo-apng-holder" aria-hidden="true"></div>
+
+        <!-- フォールバック用：公式ベクターSVG（炎と風のシンボルマークのみ・viewBox付きでパス直書き） -->
+        <div id="logo-svg-fallback" class="tomoshibi-logo-svg-fallback" aria-hidden="true">
+          <svg class="fallback-emblem-svg" viewBox="0 0 169.47 167.32" preserveAspectRatio="xMidYMid meet" focusable="false">
+            <path fill="#f6b26d" d="M20.89,67.98C21.03,68.05 21.19,67.93 21.15,67.79C20.27,63.84 19.21,55.93 23.70,49.21C27.52,43.49 33.56,41.49 45.50,37.71C55.83,34.44 64.06,33.27 74.47,31.84C84.22,30.50 90.59,29.62 99.36,29.57C108.80,29.51 117.36,30.44 124.83,31.79C125.30,31.88 125.50,31.23 125.06,31.06C119.62,28.89 112.77,26.68 104.69,25.20C94.25,23.30 86.10,23.41 79.10,23.54C68.27,23.74 60.29,25.01 53.25,26.16C37.54,28.72 30.16,31.66 27.35,32.84C17.10,37.16 14.48,40.60 13.46,42.14C12.69,43.30 8.19,50.08 11.08,57.94C13.43,64.35 19.13,67.21 20.89,67.98"/>
+            <path fill="#f9ecc2" d="M101.15,152.60C102.07,153.53 97.92,157.75 97.14,158.45C90.61,164.28 79.44,167.32 72.30,160.88C71.54,160.20 68.37,156.81 70.84,156.72C71.93,156.68 74.97,157.74 76.47,157.93C82.30,158.65 88.50,157.82 93.97,155.77C95.92,155.04 98.60,153.17 100.17,152.72C100.50,152.62 100.80,152.55 101.15,152.60"/>
+            <path fill="#f6b26d" d="M116.60,130.81C117.37,130.70 117.45,131.11 117.29,131.75C116.53,134.74 109.58,140.41 106.91,142.07C94.25,149.93 70.08,154.10 59.71,140.63C59.04,139.76 57.81,137.92 59.80,138.09C61.08,138.19 63.88,139.38 65.49,139.71C82.48,143.24 101.53,138.95 116.60,130.81"/>
+            <path fill="#b43534" d="M75.77,20.17C75.27,21.47 74.66,23.37 74.38,25.69C74.38,25.69 74.12,29.14 74.66,32.75C75.84,40.75 84.64,55.10 87.88,59.60C96.09,70.99 98.04,77.25 99.72,83.77C100.48,86.69 101.14,90.37 100.75,94.83C100.38,99.17 99.15,102.73 98.05,105.23C97.80,101.41 96.84,97.08 94.97,92.47C90.95,82.49 87.00,78.68 78.99,65.83C70.40,52.07 69.74,46.07 69.43,43.49C68.56,36.36 70.07,31.33 70.94,28.94C72.31,25.21 74.21,22.24 75.77,20.17"/>
+            <path fill="#b43534" d="M87.17,0.02C87.17,0.02 87.17,0.02 87.17,0.02C87.20,0.11 88.60,4.43 89.05,5.53C91.57,11.71 95.11,16.94 110.95,36.57C111.04,36.68 111.06,36.70 111.09,36.75C112.31,38.27 117.76,45.31 119.12,52.69C119.33,53.82 119.40,54.70 119.46,55.36C119.99,61.03 118.57,65.49 117.97,67.17C116.34,71.72 113.77,75.34 111.59,77.90C112.68,74.52 113.68,69.56 112.57,63.66C111.69,58.94 109.84,55.61 107.43,51.35C102.64,42.91 99.85,40.61 95.88,35.15C95.12,34.10 93.49,31.81 92.17,29.56C90.40,26.53 88.25,21.82 87.45,16.03C87.24,14.49 87.20,12.58 87.13,8.74C87.05,5.13 87.11,2.13 87.17,0.02"/>
+            <path fill="#b43534" d="M78.57,119.25C71.82,108.94 68.32,107.02 61.46,97.16C56.59,90.16 52.98,84.86 51.03,77.23C49.09,69.68 50.02,64.62 50.55,62.41C51.56,58.21 53.37,54.84 54.89,52.49C54.17,54.82 53.48,57.95 53.44,61.67C53.40,64.77 53.83,67.89 54.86,71.41C56.97,78.69 60.50,83.77 65.41,91.34C68.17,95.59 72.26,102.01 77.13,110.12C78.84,112.92 80.73,116.21 82.12,119.98C83.39,123.44 85.04,127.85 84.82,129.64C83.61,127.35 81.39,123.56 78.57,119.25"/>
+            <path fill="#f9ecc2" d="M82.92,0.00C82.92,0.00 82.92,0.00 82.92,0.00C82.88,0.11 81.27,4.83 80.80,6.10C78.15,13.27 74.15,19.59 57.73,42.25C57.63,42.38 57.62,42.40 57.58,42.46C56.31,44.21 50.67,52.34 49.19,60.90C48.96,62.22 48.88,63.24 48.81,64.01C48.20,70.59 49.61,75.81 50.20,77.76C51.81,83.07 54.58,87.23 56.79,90.22C55.71,86.29 54.56,80.59 55.75,73.74C56.71,68.26 58.64,64.40 61.15,59.48C66.14,49.72 69.03,47.07 73.15,40.76C73.94,39.55 75.63,36.91 77.00,34.31C78.85,30.80 81.10,25.35 81.98,18.62C82.21,16.83 82.28,14.61 82.40,10.15C82.51,5.95 82.96,2.46 82.92,0.00"/>
+            <path fill="#f9ecc2" d="M94.74,15.62C94.63,18.47 93.85,23.10 91.98,28.41C88.70,37.78 84.00,41.21 73.65,56.57C68.44,64.30 65.80,68.27 64.07,73.39C60.69,83.42 62.01,91.01 62.35,92.80C63.62,99.37 66.43,103.91 69.72,107.66C68.97,104.70 67.37,100.62 67.83,95.59C68.09,92.68 68.78,89.10 71.00,83.62C73.00,78.66 74.89,75.54 82.76,63.17C90.46,51.07 91.78,49.15 93.32,44.90C95.60,38.63 96.07,33.63 96.20,31.47C96.60,25.03 95.87,19.50 94.74,15.62"/>
+            <path fill="#f9ecc2" d="M104.55,28.56C105.08,29.99 105.69,32.08 105.98,34.62C105.98,34.62 106.22,38.39 105.60,42.33C104.21,51.05 94.41,66.61 90.81,71.49C81.69,83.84 79.48,90.65 77.56,97.75C76.71,100.93 75.94,104.93 76.31,109.81C76.67,114.56 78.00,118.30 79.71,121.01C80.03,116.85 80.57,112.31 82.66,107.30C87.18,96.45 91.55,92.33 100.47,78.39C110.02,63.47 110.82,56.93 111.19,54.11C112.22,46.34 110.63,40.82 109.70,38.21C108.25,34.12 106.23,30.85 104.55,28.56"/>
+            <path fill="#f9ecc2" d="M90.45,118.24C97.41,106.71 100.99,104.60 108.05,93.58C113.06,85.76 116.79,79.83 118.85,71.28C120.90,62.80 120.01,57.09 119.50,54.60C118.53,49.87 117.02,45.96 115.51,43.31C116.21,45.94 116.58,49.56 116.58,53.74C116.58,57.23 116.12,60.73 115.04,64.68C112.81,72.85 109.17,78.53 104.11,86.98C101.27,91.73 97.05,98.91 92.01,107.98C90.25,111.12 88.29,114.80 86.85,119.02C85.52,122.90 84.68,128.03 84.82,129.64C86.07,127.08 87.54,123.06 90.45,118.24"/>
+          </svg>
+        </div>
+      </div>
+      <!-- 感謝メッセージ（指定文言そのまま・Shippori Mincho） -->
+      <div id="thankyou-block" class="thankyou-message-block">
+        <div class="thankyou-test-pill">GitHub Pages 公開テスト版</div>
+        <h1 class="thankyou-heading">アンケート動作確認完了</h1>
+        <p class="thankyou-body">
+          ご協力ありがとうございます。<br>
+          ※本画面は表示・アニメーション確認用のテスト版です。<br>
+          回答データはスプレッドシートへ送信・保存されていません。
+        </p>
+      </div>
+    </div>
+  </section>
+
+  <script>
+    (function() {
+      'use strict';
+
+      // 回答データ状態管理
+      const state = {
+        q1_age: '',
+        q2_gender: '',
+        q3_occupation: '',
+        q4_transport: [],
+        q5_companion: '',
+        q6_channel: [],
+        q7_purpose: [],
+        q8_satisfaction: 0
+      };
+
+      // 送信状態フラグ（二重送信防止）＆ 一意な送信ID
+      let isSubmitting = false;
+      let hasSubmitted = false;
+      const sessionSubmissionId = (function() {
+        if (typeof crypto !== 'undefined' && typeof crypto.randomUUID === 'function') {
+          return 'tsudanuma77_' + crypto.randomUUID();
+        }
+        return 'tsudanuma77_' + Date.now().toString(36) + '_' + Math.random().toString(36).substring(2, 10);
+      })();
+
+      const ratingLabels = {
+        1: '1：不満',
+        2: '2：やや不満',
+        3: '3：普通',
+        4: '4：満足',
+        5: '5：大変満足'
+      };
+
+      // DOM要素
+      const screenCover = document.getElementById('screen-cover');
+      const screenSurvey = document.getElementById('screen-survey');
+      const screenComplete = document.getElementById('screen-Complete');
+      const stepPanels = document.querySelectorAll('.step-panel');
+      const stepLabelText = document.getElementById('step-label-text');
+
+      const lightNodes = [
+        document.getElementById('light-node-1'),
+        document.getElementById('light-node-2'),
+        document.getElementById('light-node-3')
+      ];
+      const lightLines = [
+        document.getElementById('light-line-1'),
+        document.getElementById('light-line-2')
+      ];
+
+      // 1. 扉ページ → STEP 1 開始
+      document.getElementById('btn-start-survey').addEventListener('click', function() {
+        if (isSubmitting || hasSubmitted) return;
+        startLogoAssetPreload();
+        screenCover.classList.add('hidden-screen');
+        screenSurvey.classList.add('active-screen');
+        goToStep(1);
+        window.scrollTo({ top: 0, behavior: 'smooth' });
+      });
+
+      // ヘッダーロゴまたは「扉へ戻る」でトップへ
+      function backToCover() {
+        if (isSubmitting || hasSubmitted) return;
+        screenSurvey.classList.remove('active-screen');
+        screenCover.classList.remove('hidden-screen');
+        window.scrollTo({ top: 0, behavior: 'smooth' });
+      }
+      document.getElementById('btn-step1-back').addEventListener('click', backToCover);
+      document.getElementById('btn-return-cover').addEventListener('click', backToCover);
+
+      // 2. ステップ切り替え制御（STEP 1 / 3 〜 STEP 3 / 3）
+      function goToStep(stepNum) {
+        if (isSubmitting || hasSubmitted) return;
+        stepPanels.forEach(function(panel) {
+          const pStep = Number(panel.getAttribute('data-step'));
+          panel.classList.toggle('active-step', pStep === stepNum);
+        });
+
+        stepLabelText.textContent = 'STEP ' + stepNum + ' / 3';
+
+        // STEP 1に戻った際のプルダウン・自由入力表示状態の完全同期
+        if (stepNum === 1) {
+          const s1 = document.getElementById('select-q1-age');
+          if (s1 && state.q1_age) {
+            s1.value = state.q1_age;
+            s1.classList.toggle('has-value', !!state.q1_age);
+          }
+          const s3 = document.getElementById('select-q3-occupation');
+          if (s3 && state.q3_occupation) {
+            s3.value = state.q3_occupation;
+            s3.classList.toggle('has-value', !!state.q3_occupation);
+          }
+          const w3 = document.getElementById('wrap-q3-other');
+          if (w3) {
+            w3.classList.toggle('open', state.q3_occupation === 'その他');
+          }
+        }
+
+        // 3つの光のインジケーター更新
+        lightNodes.forEach(function(node, idx) {
+          node.classList.toggle('lit', idx < stepNum);
+        });
+        lightLines.forEach(function(line, idx) {
+          line.classList.toggle('lit', idx < stepNum - 1);
+        });
+
+        window.scrollTo({ top: 0, behavior: 'smooth' });
+      }
+
+      // 3. 単一選択・複数選択ボタンのイベント登録
+      const optionContainers = document.querySelectorAll('[data-q]');
+      optionContainers.forEach(function(container) {
+        const qKey = container.getAttribute('data-q');
+        const qType = container.getAttribute('data-type');
+        const otherWrapId = container.getAttribute('data-other-wrap');
+        const buttons = container.querySelectorAll('.opt-btn');
+
+        buttons.forEach(function(btn) {
+          btn.addEventListener('click', function() {
+            if (isSubmitting || hasSubmitted) return;
+            const val = btn.getAttribute('data-val');
+
+            if (qType === 'single') {
+              state[qKey] = val;
+              buttons.forEach(function(b) {
+                b.classList.toggle('selected', b === btn);
+              });
+              if (otherWrapId) {
+                const wrap = document.getElementById(otherWrapId);
+                if (wrap) {
+                  wrap.classList.toggle('open', val === 'その他');
+                  if (val === 'その他') {
+                    const inp = wrap.querySelector('input');
+                    if (inp) setTimeout(function() { inp.focus(); }, 150);
+                  }
+                }
+              }
+            } else if (qType === 'multi') {
+              const arr = state[qKey];
+              const idx = arr.indexOf(val);
+              if (idx === -1) {
+                arr.push(val);
+                btn.classList.add('selected');
+              } else {
+                arr.splice(idx, 1);
+                btn.classList.remove('selected');
+              }
+              if (otherWrapId) {
+                const wrap = document.getElementById(otherWrapId);
+                if (wrap) {
+                  const hasOther = arr.indexOf('その他') !== -1;
+                  wrap.classList.toggle('open', hasOther);
+                  if (hasOther && idx === -1 && val === 'その他') {
+                    const inp = wrap.querySelector('input');
+                    if (inp) setTimeout(function() { inp.focus(); }, 150);
+                  }
+                }
+              }
+            }
+
+            // エラー枠の解除
+            const parentCard = container.closest('.q-card');
+            if (parentCard) parentCard.classList.remove('has-error');
+          });
+        });
+      });
+
+      // 3-2. プルダウン（select）のイベント登録（Q1・Q3）
+      const dropdownSelects = document.querySelectorAll('.dropdown-select');
+      dropdownSelects.forEach(function(sel) {
+        sel.addEventListener('change', function() {
+          if (isSubmitting || hasSubmitted) return;
+          const qKey = sel.getAttribute('data-select-q');
+          const val = sel.value;
+          state[qKey] = val;
+
+          sel.classList.toggle('has-value', !!val);
+
+          const otherWrapId = sel.getAttribute('data-other-wrap');
+          if (otherWrapId) {
+            const wrap = document.getElementById(otherWrapId);
+            if (wrap) {
+              const isOther = (val === 'その他');
+              wrap.classList.toggle('open', isOther);
+              if (isOther) {
+                const inp = wrap.querySelector('input');
+                if (inp) setTimeout(function() { inp.focus(); }, 150);
+              } else {
+                const inp = wrap.querySelector('input');
+                if (inp) inp.value = '';
+              }
+            }
+          }
+
+          // エラー枠の解除
+          const parentCard = sel.closest('.q-card');
+          if (parentCard && val) {
+            parentCard.classList.remove('has-error');
+          }
+        });
+      });
+
+      // 4. Q8：5つの小さな炎（燈）5段階評価（1〜5同一サイズ・評価5選択時のみ控えめな火の粉）
+      const flameBtns = document.querySelectorAll('.flame-rate-btn');
+      const flameLabel = document.getElementById('flame-rating-label');
+
+      function spawnRate5Sparks(btn) {
+        const count = 3;
+        for (let i = 0; i < count; i++) {
+          const sp = document.createElement('span');
+          sp.className = 'btn-spark-particle';
+          const size = (2.8 + i * 0.6).toFixed(1);
+          const startX = (18 + i * 8 + (Math.random() - 0.5) * 4).toFixed(1);
+          const startY = (10 + Math.random() * 6).toFixed(1);
+          const dx = ((i - 1) * 7 + (Math.random() - 0.5) * 5).toFixed(1) + 'px';
+          const dy = (-16 - Math.random() * 10).toFixed(1) + 'px';
+          const dur = (0.72 + i * 0.12).toFixed(2) + 's';
+
+          sp.style.width = size + 'px';
+          sp.style.height = size + 'px';
+          sp.style.left = startX + 'px';
+          sp.style.top = startY + 'px';
+          sp.style.setProperty('--sx', dx);
+          sp.style.setProperty('--sy', dy);
+          sp.style.animationDuration = dur;
+
+          btn.appendChild(sp);
+          setTimeout(function() {
+            if (sp.parentNode) sp.parentNode.removeChild(sp);
+          }, 1050);
+        }
+      }
+
+      flameBtns.forEach(function(btn) {
+        btn.addEventListener('click', function() {
+          if (isSubmitting || hasSubmitted) return;
+          const rate = Number(btn.getAttribute('data-rate'));
+          state.q8_satisfaction = rate;
+
+          flameBtns.forEach(function(b) {
+            const bRate = Number(b.getAttribute('data-rate'));
+            b.classList.toggle('ignited', bRate <= rate);
+          });
+
+          if (rate === 5) {
+            spawnRate5Sparks(btn);
+          }
+
+          flameLabel.textContent = ratingLabels[rate] || '';
+          document.getElementById('card-q8').classList.remove('has-error');
+          document.getElementById('err-step-3').classList.remove('show');
+        });
+      });
+
+      // 5. バリデーション＆ステップ進行
+      function validateStep1() {
+        let valid = true;
+        const c1 = document.getElementById('card-q1');
+        const c2 = document.getElementById('card-q2');
+        const c3 = document.getElementById('card-q3');
+
+        c1.classList.toggle('has-error', !state.q1_age);
+        c2.classList.toggle('has-error', !state.q2_gender);
+        c3.classList.toggle('has-error', !state.q3_occupation);
+
+        if (!state.q1_age || !state.q2_gender || !state.q3_occupation) {
+          valid = false;
+        }
+        document.getElementById('err-step-1').classList.toggle('show', !valid);
+        return valid;
+      }
+
+      function validateStep2() {
+        let valid = true;
+        const c4 = document.getElementById('card-q4');
+        const c5 = document.getElementById('card-q5');
+        const c6 = document.getElementById('card-q6');
+        const c7 = document.getElementById('card-q7');
+
+        c4.classList.toggle('has-error', state.q4_transport.length === 0);
+        c5.classList.toggle('has-error', !state.q5_companion);
+        c6.classList.toggle('has-error', state.q6_channel.length === 0);
+        c7.classList.toggle('has-error', state.q7_purpose.length === 0);
+
+        if (
+          state.q4_transport.length === 0 ||
+          !state.q5_companion ||
+          state.q6_channel.length === 0 ||
+          state.q7_purpose.length === 0
+        ) {
+          valid = false;
+        }
+        document.getElementById('err-step-2').classList.toggle('show', !valid);
+        return valid;
+      }
+
+      document.getElementById('btn-to-step2').addEventListener('click', function() {
+        if (validateStep1()) goToStep(2);
+      });
+
+      document.getElementById('btn-to-step1').addEventListener('click', function() {
+        goToStep(1);
+      });
+
+      document.getElementById('btn-to-step3').addEventListener('click', function() {
+        if (validateStep2()) goToStep(3);
+      });
+
+      const backBtnStep3 = document.getElementById('btn-to-step2-back');
+      backBtnStep3.addEventListener('click', function() {
+        goToStep(2);
+      });
+
+      // 6. 回答送信処理（入力チェック → 二重送信防止 → GAS保存成功確認後のみ完了アニメーション再生）
+      const submitBtn = document.getElementById('btn-submit-survey');
+      const submitBtnText = document.getElementById('submit-btn-text');
+      const submitErrorBanner = document.getElementById('submit-error-banner');
+      const submitErrorMessage = document.getElementById('submit-error-message');
+
+      function setSubmittingState(submitting) {
+        isSubmitting = submitting;
+        submitBtn.disabled = submitting;
+        backBtnStep3.disabled = submitting;
+        submitBtnText.textContent = submitting ? '送信中…' : '回答を送信する';
+      }
+
+      function showSubmitError(detailText) {
+        setSubmittingState(false);
+        submitErrorMessage.textContent =
+          detailText ||
+          '通信エラーまたは保存エラーが発生しました。ご入力内容は保持されていますので、通信環境をご確認のうえ再度「回答を送信する」を押してください。';
+        submitErrorBanner.classList.add('show');
+        submitErrorBanner.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
+      }
+
+      submitBtn.addEventListener('click', function() {
+        // 二重送信防止
+        if (isSubmitting || hasSubmitted) return;
+
+        submitErrorBanner.classList.remove('show');
+
+        // STEP 1・STEP 2・STEP 3 の必須項目チェック
+        if (!validateStep1()) {
+          goToStep(1);
+          return;
+        }
+        if (!validateStep2()) {
+          goToStep(2);
+          return;
+        }
+        if (!state.q8_satisfaction) {
+          const cardQ8 = document.getElementById('card-q8');
+          cardQ8.classList.add('has-error');
+          document.getElementById('err-step-3').classList.add('show');
+          cardQ8.scrollIntoView({ behavior: 'smooth', block: 'center' });
+          return;
+        }
+
+        // 既存の回答データ構造をそのまま維持（+ 重複防止識別用 submissionId）
+        const payload = {
+          submissionId: sessionSubmissionId,
+          q1_age: state.q1_age,
+          q2_gender: state.q2_gender,
+          q3_occupation: state.q3_occupation,
+          q3_other: (state.q3_occupation === 'その他') ? document.getElementById('input-q3-other').value.trim() : '',
+          q4_transport: state.q4_transport.slice(),
+          q4_other: document.getElementById('input-q4-other').value,
+          q5_companion: state.q5_companion,
+          q5_other: document.getElementById('input-q5-other').value,
+          q6_channel: state.q6_channel.slice(),
+          q6_other: document.getElementById('input-q6-other').value,
+          q7_purpose: state.q7_purpose.slice(),
+          q7_other: document.getElementById('input-q7-other').value,
+          q8_satisfaction: state.q8_satisfaction,
+          q9_impressive: document.getElementById('q9_impressive').value,
+          q10_impression: document.getElementById('q10_impression').value,
+          q11_request: document.getElementById('q11_request').value,
+          q12_future_event: document.getElementById('q12_future_event').value,
+          userAgent: navigator.userAgent
+        };
+
+        // 送信中状態に切り替え（まだ成功アニメーションは開始しない）
+        setSubmittingState(true);
+
+        // 【GitHub Pages 公開テスト版】スプレッドシートへの保存・送信は行いません
+        console.log('[PagesTest] 公開テスト版のためスプレッドシートへの保存・送信は行いません。入力検証完了。');
+        setTimeout(function() {
+          setSubmittingState(false);
+          hasSubmitted = true;
+          showCompleteScreen();
+        }, 500);
+      });
+
+      /* =========================================================
+         端末判定と素材状態管理（構成案B：端末別WebM / APNG）
+         ========================================================= */
+      const UA = navigator.userAgent || '';
+      const isIOS = /iPad|iPhone|iPod/.test(UA) ||
+        (navigator.platform === 'MacIntel' && navigator.maxTouchPoints > 1);
+      const APNG_SWAP_MS = 1736;
+      const ASSET_TIMEOUT_MS = 12000;
+
+      const targetAssetMode = isIOS ? 'apng' : 'webm';
+      let assetReady = false;
+      let assetMode = 'pending';  // 'pending' | 'apng' | 'webm' | 'svg'
+      let activeLogoMode = 'svg';
+
+      
+
+      let currentBlobUrl = null;
+      let apngBlob = null;
+      let apngUrl = null;
+      let apngLastUrl = null;
+      let apngWarmImg = null;
+      let apngLastWarmImg = null;
+      let apngImgEl = null;
+      let apngLastEl = null;
+      let apngSwapped = false;
+      let apngStartAt = 0;
+      let currentShadowStyle = 'none';
+
+      // iPhone/iPadではWebMの <video> を最初から非表示にし、src も一切設定しない（黒い四角防止）
+      if (isIOS) {
+        video.setAttribute('hidden', '');
+        video.style.display = 'none';
+      }
+
+      /* =========================================================
+         素材の非同期取得・デコード処理
+         ========================================================= */
+      function withTimeout(promise, msec, message) {
+        return new Promise(function(resolve, reject) {
+          const timer = setTimeout(function() { reject(new Error(message)); }, msec);
+          promise.then(
+            function(v) { clearTimeout(timer); resolve(v); },
+            function(e) { clearTimeout(timer); reject(e); }
+          );
+        });
+      }
+
+      function requestAsset(mode) {
+        return new Promise(function(resolve, reject) {
+          const t0 = performance.now();
+
+          if (typeof google !== 'undefined' && google.script && google.script.run) {
+            google.script.run
+              .withSuccessHandler(function(res) {
+                const ms = Math.round(performance.now() - t0);
+                if (res && res.success && res.base64) {
+                  console.log('[Logo] 素材取得成功 (' + res.format + ', Base64:' + Math.round((res.base64.length || 0) / 1024) + 'KB, 所要時間:' + ms + 'ms' + (res.serverElapsedMs ? ', GAS:' + res.serverElapsedMs + 'ms' : '') + ')');
+                  resolve(res);
+                } else {
+                  const msg = (res && res.message) || 'サーバー側処理失敗';
+                  console.warn('[Logo] GAS返却エラー: ' + msg);
+                  reject(new Error(msg));
+                }
+              })
+              .withFailureHandler(function(err) {
+                const ms = Math.round(performance.now() - t0);
+                const msg = (err && err.message) || String(err);
+                console.warn('[Logo] google.script.run通信エラー (' + ms + 'ms): ' + msg);
+                reject(new Error('google.script.run通信エラー: ' + msg));
+              })
+              .getEmbeddedLogoAsset(mode);
+            return;
+          }
+          // GitHub Pages 静的バイナリ配信（4ファイル構成専用）
+          if (mode === 'apng') {
+            Promise.all([
+              fetch('logo_apng.png').then(function(r) {
+                if (!r.ok) throw new Error('logo_apng.png 取得失敗 (HTTP ' + r.status + ')');
+                return r.blob();
+              }),
+              fetch('logo_apng_last.png').then(function(r) {
+                if (!r.ok) throw new Error('logo_apng_last.png 取得失敗 (HTTP ' + r.status + ')');
+                return r.blob();
+              })
+            ]).then(function(blobs) {
+              resolve({
+                success: true,
+                format: 'apng',
+                blob: blobs[0],
+                lastBlob: blobs[1],
+                serverElapsedMs: 0,
+                local: true
+              });
+            }).catch(function(err) {
+              reject(new Error('APNG静的ファイル取得エラー: ' + err.message));
+            });
+          } else {
+            fetch('logo_webm.webm').then(function(r) {
+              if (!r.ok) throw new Error('logo_webm.webm 取得失敗 (HTTP ' + r.status + ')');
+              return r.blob();
+            }).then(function(blob) {
+              resolve({
+                success: true,
+                format: 'webm',
+                blob: blob,
+                serverElapsedMs: 0,
+                local: true
+              });
+            }).catch(function(err) {
+              reject(new Error('WebM静的ファイル取得エラー: ' + err.message));
+            });
+          }
+        });
+      }
+
+      function base64ToBytes(b64) {
+        if (!b64) return new Uint8Array(0);
+        const cleaned = b64.replace(/<[^>]+>/g, '').replace(/[\s\r\n\ufeff]+/g, '');
+        const binary = atob(cleaned);
+        const len = binary.length;
+        const bytes = new Uint8Array(len);
+        for (let i = 0; i < len; i++) bytes[i] = binary.charCodeAt(i);
+        return bytes;
+      }
+
+      function decodeImage(url) {
+        return new Promise(function(resolve, reject) {
+          const img = new Image();
+          img.decoding = 'sync';
+          img.src = url;
+          if (typeof img.decode === 'function') {
+            img.decode().then(function() { resolve(img); }, function() { reject(new Error('画像デコード失敗')); });
+          } else {
+            img.onload = function() { resolve(img); };
+            img.onerror = function() { reject(new Error('画像デコード失敗')); };
+          }
+        });
+      }
+
+      function checkPngSignature(bytes, label, requireAnimation) {
+        const sig = [0x89, 0x50, 0x4E, 0x47, 0x0D, 0x0A, 0x1A, 0x0A];
+        for (let i = 0; i < sig.length; i++) {
+          if (bytes[i] !== sig[i]) throw new Error(label + 'がPNG形式ではありません');
+        }
+        if (requireAnimation) {
+          let found = false;
+          const limit = Math.min(bytes.length - 4, 256);
+          for (let i = 8; i < limit; i++) {
+            if (bytes[i] === 0x61 && bytes[i + 1] === 0x63 && bytes[i + 2] === 0x54 && bytes[i + 3] === 0x4C) { found = true; break; }
+          }
+          if (!found) throw new Error(label + 'にacTL(アニメーション情報)がありません');
+        }
+      }
+
+      function probeImageAlpha(img) {
+        try {
+          const c = document.createElement('canvas');
+          c.width = img.naturalWidth; c.height = img.naturalHeight;
+          const g = c.getContext('2d', { willReadFrequently: true });
+          g.drawImage(img, 0, 0);
+          const w = c.width, h = c.height;
+          let cornerMax = 0;
+          [[2, 2], [w - 3, 2], [2, h - 3], [w - 3, h - 3]].forEach(function(p) {
+            cornerMax = Math.max(cornerMax, g.getImageData(p[0], p[1], 1, 1).data[3]);
+          });
+          const blk = g.getImageData(Math.floor(w * 0.5) - 40, Math.floor(h * 0.30) - 40, 80, 80).data;
+          let logoMax = 0;
+          for (let i = 3; i < blk.length; i += 4) { if (blk[i] > logoMax) logoMax = blk[i]; }
+          return { ok: cornerMax === 0 && logoMax > 100, cornerMax: cornerMax, logoMax: logoMax };
+        } catch (e) {
+          return { unknown: true, error: String(e) };
+        }
+      }
+
+      function probeWebmAlpha() {
+        try {
+          const c = document.createElement('canvas');
+          c.width = 64; c.height = 36;
+          const g = c.getContext('2d', { willReadFrequently: true });
+          g.clearRect(0, 0, 64, 36);
+          g.drawImage(video, 0, 0, 64, 36);
+          let cornerMax = 0;
+          [[1, 1], [62, 1], [1, 34], [62, 34]].forEach(function(p) {
+            cornerMax = Math.max(cornerMax, g.getImageData(p[0], p[1], 1, 1).data[3]);
+          });
+          return cornerMax === 0 ? { ok: true, cornerMax: 0 } : { ok: false, cornerMax: cornerMax };
+        } catch (e) {
+          return { unknown: true, error: String(e) };
+        }
+      }
+
+      async function prepareWebm(res) {
+        let blob = res.blob;
+        if (!blob && res.base64) {
+          const bytes = base64ToBytes(res.base64);
+          if (!(bytes[0] === 0x1A && bytes[1] === 0x45 && bytes[2] === 0xDF && bytes[3] === 0xA3)) {
+            throw new Error('WebMヘッダー(EBML)が不正です');
+          }
+          blob = new Blob([bytes], { type: 'video/webm' });
+        }
+        const url = URL.createObjectURL(blob);
+        video.removeAttribute('hidden');
+        video.style.display = '';
+
+        await new Promise(function(resolve, reject) {
+          let done = false;
+          const finish = function(err) {
+            if (done) return;
+            done = true;
+            clearTimeout(timer);
+            video.removeEventListener('loadeddata', onLoaded);
+            video.removeEventListener('error', onError);
+            if (err) reject(err); else resolve();
+          };
+          const onLoaded = function() { finish(null); };
+          const onError = function() { finish(new Error('WebMデコード失敗（非対応コーデック等）')); };
+          const timer = setTimeout(function() { finish(new Error('WebMデコードタイムアウト')); }, 10000);
+          video.addEventListener('loadeddata', onLoaded);
+          video.addEventListener('error', onError);
+          video.src = url;
+          video.load();
+        });
+
+        const probe = probeWebmAlpha();
+        if (!probe.unknown && !probe.ok) {
+          video.removeAttribute('src');
+          video.load();
+          URL.revokeObjectURL(url);
+          throw new Error('WebMの透過が無効');
+        }
+
+        if (currentBlobUrl) URL.revokeObjectURL(currentBlobUrl);
+        currentBlobUrl = url;
+      }
+
+      async function prepareApng(res) {
+        try {
+          let blob = res.blob;
+          if (!blob && res.base64) {
+            const bytes = base64ToBytes(res.base64);
+            checkPngSignature(bytes, 'APNG', true);
+            blob = new Blob([bytes], { type: 'image/png' });
+          }
+
+          const url = URL.createObjectURL(blob);
+          const warm = await decodeImage(url);
+          if (warm.naturalWidth !== 960 || warm.naturalHeight !== 540) {
+            URL.revokeObjectURL(url);
+            throw new Error('APNGサイズ不一致: ' + warm.naturalWidth + 'x' + warm.naturalHeight);
+          }
+
+          // 最終フレーム静止画の検証
+          let lastUrl = null;
+          let warmLast = null;
+          if (res.lastBlob || res.lastFrameBase64) {
+            try {
+              let lBlob = res.lastBlob;
+              if (!lBlob && res.lastFrameBase64) {
+                const lastBytes = base64ToBytes(res.lastFrameBase64);
+                checkPngSignature(lastBytes, '最終フレーム静止画', false);
+                lBlob = new Blob([lastBytes], { type: 'image/png' });
+              }
+              const lUrl = URL.createObjectURL(lBlob);
+              const lWarm = await decodeImage(lUrl);
+              if (lWarm.naturalWidth === 960 && lWarm.naturalHeight === 540) {
+                lastUrl = lUrl;
+                warmLast = lWarm;
+              } else {
+                URL.revokeObjectURL(lUrl);
+              }
+            } catch (lastErr) {
+              console.warn('[Logo] 最終静止画スキップ: ' + lastErr.message);
+            }
+          }
+
+          if (apngUrl) URL.revokeObjectURL(apngUrl);
+          if (apngLastUrl) URL.revokeObjectURL(apngLastUrl);
+          apngBlob = blob;
+          apngUrl = url;
+          apngLastUrl = lastUrl;
+          apngWarmImg = warm;
+          apngLastWarmImg = warmLast;
+          console.log('[Logo] APNG準備完了 (960x540 ' + (lastUrl ? '静止PNG併用' : 'APNG単体維持') + ' 透過OK)');
+        } catch (err) {
+          console.warn('[Logo] APNG検証失敗: ' + err.message);
+          throw err;
+        }
+      }
+
+      /**
+       * アンケート回答中にバックグラウンドでロゴ素材を読み込む
+       */
+      function startLogoAssetPreload() {
+        if (assetReady || assetMode !== 'pending') return;
+        assetMode = targetAssetMode;
+
+        withTimeout(requestAsset(targetAssetMode), ASSET_TIMEOUT_MS, '素材取得タイムアウト')
+          .then(function(res) {
+            if (targetAssetMode === 'apng') {
+              return prepareApng(res);
+            } else {
+              return prepareWebm(res);
+            }
+          })
+          .then(function() {
+            assetReady = true;
+            console.log('[LogoPreload] 素材の事前読み込みが完了しました (' + targetAssetMode + ')');
+          })
+          .catch(function(err) {
+            console.warn('[LogoPreload] 素材先読みに失敗（またはタイムアウト）。SVGフォールバックを使用します:', err.message);
+            assetReady = true;
+            assetMode = 'svg';
+          });
+      }
+
+      // 即座に素材先読みを開始（loadイベント待ちによる不発や遅延を解消）
+      startLogoAssetPreload();
+      if (document.readyState === 'loading') {
+        document.addEventListener('DOMContentLoaded', startLogoAssetPreload);
+      }
+
+      /* =========================================================
+         APNG 再生制御（iPhone/iPad用）
+         ========================================================= */
+      function clearApng() {
+        if (apngHolder) apngHolder.innerHTML = '';
+        apngImgEl = null;
+        apngLastEl = null;
+        apngSwapped = false;
+      }
+
+      function makeLogoImg(url) {
+        const im = new Image();
+        im.className = 'tomoshibi-logo-img';
+        im.alt = '';
+        im.draggable = false;
+        im.decoding = 'sync';
+        im.style.opacity = '0';
+        try {
+          if (isIOS && activeLogoMode === 'apng' && currentShadowStyle !== 'none') {
+            im.style.filter = currentShadowStyle;
+            im.style.webkitFilter = currentShadowStyle;
+          }
+        } catch (_) {}
+        im.src = url;
+        return im;
+      }
+
+      function startApngPlayback() {
+        clearApng();
+        if (apngLastUrl) {
+          apngLastEl = makeLogoImg(apngLastUrl);
+          apngHolder.appendChild(apngLastEl);
+        }
+        // 再生直前に Blob から新規 ObjectURL を生成し、Safariのキャッシュによる先走り再生・静止画化を防止
+        const playUrl = apngBlob ? URL.createObjectURL(apngBlob) : apngUrl;
+        apngImgEl = makeLogoImg(playUrl);
+        apngHolder.appendChild(apngImgEl);
+        apngStartAt = performance.now();
+      }
+
+      function swapApngToLastFrame() {
+        apngSwapped = true;
+        if (apngLastEl) {
+          apngLastEl.style.opacity = '1';
+          try {
+            if (isIOS && activeLogoMode === 'apng' && currentShadowStyle !== 'none') {
+              apngLastEl.style.filter = currentShadowStyle;
+              apngLastEl.style.webkitFilter = currentShadowStyle;
+            }
+          } catch (_) {}
+          if (apngImgEl) apngImgEl.style.opacity = '0';
+          setTimeout(function() {
+            if (apngImgEl && apngImgEl.parentNode) apngImgEl.parentNode.removeChild(apngImgEl);
+            apngImgEl = null;
+          }, 400);
+        } else {
+          // 静止PNGがない場合：APNG要素を表示のまま維持し影を付与
+          if (apngImgEl) {
+            apngImgEl.style.opacity = '1';
+            try {
+              if (isIOS && activeLogoMode === 'apng' && currentShadowStyle !== 'none') {
+                apngImgEl.style.filter = currentShadowStyle;
+                apngImgEl.style.webkitFilter = currentShadowStyle;
+              }
+            } catch (_) {}
+          }
+        }
+      }
+
+      /* =========================================================
+         ドロップシャドウ適用（iPhone APNG対応・2段階茶系色）
+         ========================================================= */
+      function applyLogoDropShadow(progress) {
+        try {
+          let shadowStyle = 'none';
+          if (progress > 0.005) {
+            const p = Math.max(0, Math.min(1, progress));
+            const a1 = (0.48 * p).toFixed(3);
+            const a2 = (0.24 * p).toFixed(3);
+            shadowStyle =
+              'drop-shadow(0 1px 2px rgba(110, 70, 40, ' + a1 + ')) ' +
+              'drop-shadow(0 5px 12px rgba(120, 78, 48, ' + a2 + '))';
+          }
+          currentShadowStyle = shadowStyle;
+
+          if (isIOS && activeLogoMode === 'apng') {
+            // iPhone/iPad実機 Safari（APNGモード）：
+            // WebKitの合成レイヤー制約により、<img>要素に直接filterおよび-webkit-filterを適用
+            if (logoAnchor) {
+              logoAnchor.style.filter = 'none';
+              logoAnchor.style.webkitFilter = 'none';
+            }
+            if (apngImgEl) {
+              apngImgEl.style.filter = shadowStyle;
+              apngImgEl.style.webkitFilter = shadowStyle;
+            }
+            if (apngLastEl) {
+              apngLastEl.style.filter = shadowStyle;
+              apngLastEl.style.webkitFilter = shadowStyle;
+            }
+          } else {
+            // PC（WebM・APNG・SVG）および Android：
+            // 既存どおり親枠(#logo-anchor)にドロップシャドウを適用
+            if (logoAnchor) {
+              logoAnchor.style.filter = shadowStyle;
+              logoAnchor.style.webkitFilter = shadowStyle;
+            }
+            if (apngImgEl) {
+              apngImgEl.style.filter = 'none';
+              apngImgEl.style.webkitFilter = 'none';
+            }
+            if (apngLastEl) {
+              apngLastEl.style.filter = 'none';
+              apngLastEl.style.webkitFilter = 'none';
+            }
+          }
+        } catch (e) {
+          console.warn('[logo] drop-shadow error:', e);
+        }
+      }
+
+      function lockLogoFinalFrame() {
+        if (activeLogoMode !== 'webm' || frameCaptured || !video.videoWidth || !video.videoHeight) return;
+        try {
+          freezeCanvas.width = video.videoWidth;
+          freezeCanvas.height = video.videoHeight;
+          freezeCtx.clearRect(0, 0, freezeCanvas.width, freezeCanvas.height);
+          freezeCtx.drawImage(video, 0, 0, freezeCanvas.width, freezeCanvas.height);
+          freezeCanvas.style.opacity = '1';
+          video.style.opacity = '0';
+          frameCaptured = true;
+        } catch (e) {
+          video.style.opacity = '1';
+        }
+      }
+
+      function updateMetrics() {
+        if (!completionActive) return;
+
+        width = window.innerWidth;
+        height = window.innerHeight;
+        dpr = Math.min(window.devicePixelRatio || 1, 2);
+
+        canvas.width = Math.round(width * dpr);
+        canvas.height = Math.round(height * dpr);
+        ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
+
+        const rect = logoAnchor.getBoundingClientRect();
+        targetPoint.x = rect.left + rect.width * CONFIG.logoAnchorXRatio;
+        targetPoint.y = rect.top + rect.height * CONFIG.logoAnchorYRatio;
+        logoBottomY = rect.top + rect.height * CONFIG.logoBottomYRatio;
+        logoVisibleWidth = Math.max(130, rect.width * 0.34);
+
+        maxCornerDist = Math.max(
+          100,
+          Math.hypot(
+            Math.max(targetPoint.x, width - targetPoint.x),
+            Math.max(targetPoint.y, height - targetPoint.y)
+          )
+        );
+
+        if (sequenceFinished || isReducedMotion) {
+          renderBackgroundAndSpread(1);
+        }
+      }
+
+      window.addEventListener('resize', updateMetrics);
+
+      function lerp(a, b, t) {
+        return a + (b - a) * t;
+      }
+
+      function lerpRGB(c1, c2, t) {
+        return {
+          r: Math.round(lerp(c1.r, c2.r, t)),
+          g: Math.round(lerp(c1.g, c2.g, t)),
+          b: Math.round(lerp(c1.b, c2.b, t))
+        };
+      }
+
+      function easeInOutGentle(t) {
+        if (t <= 0) return 0;
+        if (t >= 1) return 1;
+        const sine = 0.5 * (1 - Math.cos(Math.PI * t));
+        const smooth = t * t * (3 - 2 * t);
+        return sine * 0.6 + smooth * 0.4;
+      }
+
+      function easeSlowStartIllumination(t) {
+        if (t <= 0) return 0;
+        if (t >= 1) return 1;
+        const warped = Math.pow(t, 1.28);
+        return 0.5 * (1 - Math.cos(Math.PI * warped));
+      }
+
+      function sampleColorRamp(level) {
+        const L = Math.max(0, Math.min(1, level));
+        for (let i = 0; i < ILLUMINATION_COLOR_RAMP.length - 1; i++) {
+          const stopA = ILLUMINATION_COLOR_RAMP[i];
+          const stopB = ILLUMINATION_COLOR_RAMP[i + 1];
+          if (L >= stopA.pos && L <= stopB.pos) {
+            const localT = (L - stopA.pos) / (stopB.pos - stopA.pos);
+            const smoothT = localT * localT * (3 - 2 * localT);
+            return lerpRGB(stopA.color, stopB.color, smoothT);
+          }
+        }
+        return FINAL_OFF_WHITE;
+      }
+
+      function getLocalIlluminationLevel(distNorm, whiteProgress) {
+        if (whiteProgress <= 0) return 0;
+        if (whiteProgress >= 1) return 1;
+
+        const p = easeSlowStartIllumination(whiteProgress);
+        const spatialLag = 0.36 * CONFIG.spreadSoftnessScale;
+        const dCurve = Math.pow(Math.max(0, Math.min(1, distNorm)), 1.15);
+        const rawL = (p * (1 + spatialLag) - dCurve * spatialLag);
+        return easeInOutGentle(Math.max(0, Math.min(1, rawL)));
+      }
+
+      function buildRisingOrbs() {
+        updateMetrics();
+        const rand = createSeededRandom(7712);
+        const list = [];
+        const totalCount = CONFIG.orbCount;
+
+        const spawnBottomY = height + 28;
+        const baseCeilingCenterY = logoBottomY + 12 - CONFIG.upperReachOffsetPx;
+        const travelSpan = Math.max(180, spawnBottomY - baseCeilingCenterY);
+
+        for (let i = 0; i < totalCount; i++) {
+          const r1 = rand();
+          const r2 = rand();
+          const r3 = rand();
+          const r4 = rand();
+          const r5 = rand();
+          const r6 = rand();
+          const r7 = rand();
+          const r8 = rand();
+
+          const palette = WARM_ORBS_PALETTE[i % WARM_ORBS_PALETTE.length];
+
+          const centeredNormX = ((r1 - 0.5) + (r2 - 0.5) * 0.85) / 1.85;
+          const ceilingOffsetRatio = (r3 - 0.42) * 0.34;
+          const fadeDurationDist = 68 + r4 * 64;
+          const initialCycleProgress = 0.04 + ((i + r5 * 0.8) / totalCount) * 0.88;
+          const baseRiseSpeedPx = (36 + r6 * 22) * (travelSpan / 340);
+
+          let swayAmpPx = 7 + r7 * 13;
+          const swayFreq = 0.65 + r8 * 0.65;
+          const swayPhase = rand() * Math.PI * 2;
+          const driftSlope = (rand() - 0.5) * 0.14;
+
+          const breathePhase = rand() * Math.PI * 2;
+          const breatheSpeed = 0.65 + rand() * 0.55;
+
+          let layer = 'mid';
+          let baseRadius = 26;
+          let baseAlpha = 0.52;
+          let depthSpeedMul = 1.0;
+
+          const layerRoll = i / totalCount;
+          if (layerRoll < 0.28) {
+            layer = 'back';
+            baseRadius = 44 + r3 * 42;
+            baseAlpha = 0.19 + r4 * 0.15;
+            depthSpeedMul = 0.78;
+            swayAmpPx *= 0.75;
+          } else if (layerRoll < 0.68) {
+            layer = 'mid';
+            baseRadius = 19 + r3 * 20;
+            baseAlpha = 0.36 + r4 * 0.24;
+            depthSpeedMul = 0.96;
+          } else {
+            layer = 'front';
+            baseRadius = 9.5 + r3 * 11;
+            baseAlpha = 0.54 + r4 * 0.30;
+            depthSpeedMul = 1.12;
+            swayAmpPx *= 1.1;
+          }
+
+          const indivTopY = baseCeilingCenterY + ceilingOffsetRatio * travelSpan;
+          const indivSpan = Math.max(120, spawnBottomY - indivTopY);
+          const startY = spawnBottomY - initialCycleProgress * indivSpan;
+
+          list.push({
+            centeredNormX: centeredNormX,
+            ceilingOffsetRatio: ceilingOffsetRatio,
+            fadeDurationDist: fadeDurationDist,
+            y: startY,
+            baseRiseSpeedPx: baseRiseSpeedPx,
+            swayAmpPx: swayAmpPx,
+            swayFreq: swayFreq,
+            swayPhase: swayPhase,
+            driftSlope: driftSlope,
+            breathePhase: breathePhase,
+            breatheSpeed: breatheSpeed,
+            palette: palette,
+            layer: layer,
+            baseRadius: baseRadius,
+            baseAlpha: baseAlpha,
+            depthSpeedMul: depthSpeedMul
+          });
+        }
+
+        const order = { back: 0, mid: 1, front: 2 };
+        list.sort(function(a, b) {
+          return order[a.layer] - order[b.layer];
+        });
+
+        return list;
+      }
+
+      function renderBackgroundAndSpread(whiteProgress) {
+        ctx.globalCompositeOperation = 'source-over';
+
+        if (whiteProgress <= 0) {
+          ctx.fillStyle = '#111b36';
+          ctx.fillRect(0, 0, width, height);
+          return;
+        }
+
+        if (whiteProgress >= 1) {
+          ctx.fillStyle = '#fffcf7';
+          ctx.fillRect(0, 0, width, height);
+          return;
+        }
+
+        const outerRadius = maxCornerDist * 1.08;
+        const grad = ctx.createRadialGradient(
+          targetPoint.x, targetPoint.y, 0,
+          targetPoint.x, targetPoint.y, outerRadius
+        );
+
+        const stops = [0.00, 0.14, 0.28, 0.44, 0.60, 0.76, 0.90, 1.00];
+        for (let i = 0; i < stops.length; i++) {
+          const s = stops[i];
+          const localL = getLocalIlluminationLevel(s, whiteProgress);
+          const col = sampleColorRamp(localL);
+          grad.addColorStop(s, 'rgb(' + col.r + ', ' + col.g + ', ' + col.b + ')');
+        }
+
+        ctx.fillStyle = grad;
+        ctx.fillRect(0, 0, width, height);
+      }
+
+      function triggerWhiteSpread() {
+        if (whiteSpreadStarted || isReducedMotion) return;
+        whiteSpreadStarted = true;
+        whiteSpreadStartTime = performance.now();
+        if (!rafId && !sequenceFinished) {
+          lastFrameTime = performance.now();
+          rafId = requestAnimationFrame(renderFrame);
+        }
+      }
+
+      video.addEventListener('ended', function() {
+        if (activeLogoMode !== 'webm') return;
+        lockLogoFinalFrame();
+        triggerWhiteSpread();
+      });
+
+      function renderFrame(now) {
+        const dt = Math.min(0.06, Math.max(0.001, (now - lastFrameTime) / 1000));
+        lastFrameTime = now;
+        const elapsed = (now - animStartTime) / 1000;
+
+        // 昇る光の中で公式ロゴを開始（1.35秒時点。素材取得中の場合は最大8秒まで穏やかな光を保ち待機）
+        if (!logoStarted && elapsed >= CONFIG.logoStartDelay) {
+          const isStillLoading = !assetReady && assetMode !== 'svg' && elapsed < 8.0;
+          if (isStillLoading) {
+            // 素材ダウンロード中は光の上昇を継続（早まったSVGフォールバックを防止）
+          } else {
+            logoStarted = true;
+            logoStartTime = now;
+
+            if (assetReady && assetMode === 'apng' && apngUrl) {
+              activeLogoMode = 'apng';
+              console.log('[Logo] APNGモードで再生開始');
+            } else if (assetReady && assetMode === 'webm' && currentBlobUrl) {
+              activeLogoMode = 'webm';
+              console.log('[Logo] WebMモードで再生開始');
+            } else {
+              activeLogoMode = 'svg';
+              console.log('[Logo] SVGフォールバックで再生開始 (assetReady=' + assetReady + ', assetMode=' + assetMode + ')');
+            }
+
+            if (activeLogoMode === 'apng') {
+              startApngPlayback();
+            } else if (activeLogoMode === 'webm') {
+              video.currentTime = 0;
+              const playPromise = video.play();
+              if (playPromise && typeof playPromise.catch === 'function') {
+                playPromise.catch(function() {
+                  activeLogoMode = 'svg';
+                  video.style.opacity = '0';
+                  console.warn('[Logo] WebM再生失敗 → SVGで継続');
+                });
+              }
+            }
+          }
+        }
+
+        if (logoStarted) {
+          const logoElapsed = (now - logoStartTime) / 1000;
+          const fadeT = Math.max(0, Math.min(1, logoElapsed / CONFIG.logoFadeInDuration));
+          const smoothOpacity = 1 - Math.pow(1 - fadeT, 2.2);
+
+          if (activeLogoMode === 'svg') {
+            svgFallback.style.opacity = smoothOpacity.toFixed(3);
+            video.style.opacity = '0';
+            freezeCanvas.style.opacity = '0';
+            if (!whiteSpreadStarted && logoElapsed >= 1.75) {
+              triggerWhiteSpread();
+            }
+          } else if (activeLogoMode === 'apng') {
+            if (!apngSwapped) {
+              if (apngImgEl) apngImgEl.style.opacity = smoothOpacity.toFixed(3);
+              if (logoElapsed * 1000 >= APNG_SWAP_MS) swapApngToLastFrame();
+            }
+            if (!whiteSpreadStarted && logoElapsed >= 1.75) {
+              triggerWhiteSpread();
+            }
+          } else {
+            // WebM
+            if (!frameCaptured) {
+              video.style.opacity = smoothOpacity.toFixed(3);
+            }
+            if (
+              Number.isFinite(video.duration) &&
+              video.duration > 0 &&
+              video.currentTime >= video.duration - 0.05
+            ) {
+              lockLogoFinalFrame();
+            }
+            if (!whiteSpreadStarted && logoElapsed >= 2.15) {
+              lockLogoFinalFrame();
+              triggerWhiteSpread();
+            }
+          }
+        }
+
+        // ③ ロゴ完成後、背景が #111B36 → #E8DFD1 → #FFFCF7 へ変化
+        let whiteProgress = 0;
+        if (whiteSpreadStarted) {
+          const whiteElapsed = (now - whiteSpreadStartTime) / 1000;
+          whiteProgress = Math.max(0, Math.min(1, whiteElapsed / CONFIG.whiteTransitionDuration));
+
+          const centerIllum = getLocalIlluminationLevel(0.1, whiteProgress);
+          const shadowProg = easeInOutGentle(Math.max(0, Math.min(1, (centerIllum - 0.25) / 0.75)));
+          applyLogoDropShadow(shadowProg);
+
+          if (centerIllum > 0.60) {
+            body.classList.add('is-white-stage');
+          }
+
+          // 背景がほぼオフホワイトに達したら ④ 感謝メッセージのフェードインを開始
+          if (!messageStarted && whiteProgress >= 0.90) {
+            messageStarted = true;
+            messageStartTime = now;
+            thankyouBlock.classList.add('visible');
+          }
+        }
+
+        // ④ 感謝メッセージのフェードイン制御
+        if (messageStarted) {
+          const msgElapsed = (now - messageStartTime) / 1000;
+          const msgProgress = Math.max(0, Math.min(1, msgElapsed / CONFIG.messageFadeInDuration));
+          const easeMsg = 1 - Math.pow(1 - msgProgress, 2.4);
+          thankyouBlock.style.opacity = easeMsg.toFixed(3);
+          thankyouBlock.style.transform = 'translateY(' + ((1 - easeMsg) * 8).toFixed(2) + 'px)';
+
+          if (msgProgress >= 1 && whiteProgress >= 1) {
+            sequenceFinished = true;
+          }
+        }
+
+        /* 1. 背景の描画 */
+        renderBackgroundAndSpread(whiteProgress);
+
+        /* 2. 穏やかに昇り続ける小さな温かい光 */
+        if (whiteProgress < 0.995) {
+          const minDim = Math.min(width, height);
+          const viewportScale = Math.max(0.55, Math.min(1.12, minDim / 480));
+
+          const streamHalfWidth = logoVisibleWidth * 0.92 * CONFIG.rangeWidthScale;
+          const spawnBottomY = height + 28;
+          const baseCeilingCenterY = logoBottomY + 12 - CONFIG.upperReachOffsetPx;
+          const travelSpan = Math.max(180, spawnBottomY - baseCeilingCenterY);
+
+          const introFade = Math.min(1, elapsed / 0.45);
+
+          const streamIllum = getLocalIlluminationLevel(0.28, whiteProgress);
+          const meltT = easeInOutGentle(Math.min(1, streamIllum * CONFIG.meltCurveScale));
+          const meltAlphaFactor = Math.pow(Math.max(0, 1 - meltT), 1.30) * (1 - whiteProgress * whiteProgress);
+
+          ctx.save();
+          ctx.globalCompositeOperation = streamIllum < 0.22 ? 'screen' : 'source-over';
+
+          const ambY = lerp(height * 0.78, logoBottomY + 24, 0.45);
+          const ambR = streamHalfWidth * 1.45;
+          const ambAlpha = 0.07 * introFade * meltAlphaFactor;
+          if (ambAlpha > 0.003) {
+            const ambColor = meltT < 0.55
+              ? lerpRGB({ r: 238, g: 210, b: 162 }, IVORY_BEIGE_MID, meltT / 0.55)
+              : lerpRGB(IVORY_BEIGE_MID, FINAL_OFF_WHITE, (meltT - 0.55) / 0.45);
+            const ambGrad = ctx.createRadialGradient(targetPoint.x, ambY, 0, targetPoint.x, ambY, ambR);
+            ambGrad.addColorStop(0.00, 'rgba(' + ambColor.r + ', ' + ambColor.g + ', ' + ambColor.b + ', ' + ambAlpha.toFixed(3) + ')');
+            ambGrad.addColorStop(0.55, 'rgba(' + ambColor.r + ', ' + ambColor.g + ', ' + ambColor.b + ', ' + (ambAlpha * 0.4).toFixed(3) + ')');
+            ambGrad.addColorStop(1.00, 'rgba(' + ambColor.r + ', ' + ambColor.g + ', ' + ambColor.b + ', 0)');
+            ctx.fillStyle = ambGrad;
+            ctx.beginPath();
+            ctx.arc(targetPoint.x, ambY, ambR, 0, Math.PI * 2);
+            ctx.fill();
+          }
+
+          for (let i = 0; i < orbs.length; i++) {
+            const orb = orbs[i];
+            orb.y -= orb.baseRiseSpeedPx * CONFIG.riseSpeedScale * orb.depthSpeedMul * dt;
+
+            const indivCeilingY = baseCeilingCenterY + orb.ceilingOffsetRatio * travelSpan;
+            const fadeStartY = indivCeilingY + orb.fadeDurationDist;
+
+            if (orb.y < indivCeilingY) {
+              orb.y = spawnBottomY + (indivCeilingY - orb.y);
+            }
+
+            const riseNorm = Math.max(0, Math.min(1, (spawnBottomY - orb.y) / Math.max(1, spawnBottomY - indivCeilingY)));
+            const swayX = Math.sin(elapsed * orb.swayFreq + orb.swayPhase) * orb.swayAmpPx;
+            const gentleDriftX = (riseNorm - 0.3) * orb.driftSlope * streamHalfWidth;
+            const naturalStreamTaper = 1 - riseNorm * 0.18;
+            const x = targetPoint.x + orb.centeredNormX * streamHalfWidth * 2 * naturalStreamTaper + swayX + gentleDriftX;
+            const y = orb.y;
+
+            let verticalEnvelope = 1.0;
+            if (y > height - 24) {
+              verticalEnvelope = Math.max(0, Math.min(1, (spawnBottomY - y) / 52));
+            }
+            if (y < fadeStartY) {
+              const topT = Math.max(0, Math.min(1, (y - indivCeilingY) / orb.fadeDurationDist));
+              verticalEnvelope *= 0.5 * (1 - Math.cos(Math.PI * topT));
+            }
+
+            const gentleBreathe = 0.94 + 0.06 * Math.sin(elapsed * orb.breatheSpeed + orb.breathePhase);
+
+            const orbDistNorm = Math.hypot(x - targetPoint.x, y - targetPoint.y) / maxCornerDist;
+            const localOrbIllum = getLocalIlluminationLevel(orbDistNorm, whiteProgress);
+            const localMelt = easeInOutGentle(Math.min(1, localOrbIllum * CONFIG.meltCurveScale));
+            const localBgColor = sampleColorRamp(localOrbIllum);
+
+            const localAlphaFactor = Math.pow(Math.max(0, 1 - localMelt), 1.28) * (1 - whiteProgress * whiteProgress);
+
+            const alpha = Math.min(
+              0.92,
+              orb.baseAlpha * gentleBreathe * verticalEnvelope * introFade * localAlphaFactor
+            );
+            if (alpha <= 0.004) continue;
+
+            const meltBlurExpand = 1 + 0.22 * localMelt;
+            const outerR = orb.baseRadius * viewportScale * CONFIG.lightSizeScale * meltBlurExpand;
+
+            const p = orb.palette;
+            let cCore, cMid, cHalo, cAmb;
+            if (localMelt <= 0.001) {
+              cCore = p.core;
+              cMid  = p.mid;
+              cHalo = p.halo;
+              cAmb  = p.amb;
+            } else if (localMelt < 0.55) {
+              const k = localMelt / 0.55;
+              cCore = lerpRGB(p.core, FINAL_OFF_WHITE, k * 0.80);
+              cMid  = lerpRGB(p.mid,  IVORY_BEIGE_MID, k);
+              cHalo = lerpRGB(p.halo, IVORY_BEIGE_MID, k * 0.90);
+              cAmb  = lerpRGB(p.amb,  IVORY_BEIGE_MID, k * 0.80);
+            } else {
+              const k = (localMelt - 0.55) / 0.45;
+              const targetAssimilate = lerpRGB(localBgColor, FINAL_OFF_WHITE, 0.70);
+              cCore = lerpRGB(FINAL_OFF_WHITE, targetAssimilate, k);
+              cMid  = lerpRGB(IVORY_BEIGE_MID, targetAssimilate, k);
+              cHalo = lerpRGB(IVORY_BEIGE_MID, targetAssimilate, k);
+              cAmb  = lerpRGB(IVORY_BEIGE_MID, targetAssimilate, k);
+            }
+
+            const contrastFlatten = 1 - 0.48 * localMelt;
+
+            const grad = ctx.createRadialGradient(x, y, 0, x, y, outerR);
+            if (orb.layer === 'back') {
+              grad.addColorStop(0.00, 'rgba(' + cMid.r + ', ' + cMid.g + ', ' + cMid.b + ', ' + (alpha * 0.58 * contrastFlatten).toFixed(3) + ')');
+              grad.addColorStop(0.35, 'rgba(' + cHalo.r + ', ' + cHalo.g + ', ' + cHalo.b + ', ' + (alpha * 0.36).toFixed(3) + ')');
+              grad.addColorStop(0.70, 'rgba(' + cAmb.r + ', ' + cAmb.g + ', ' + cAmb.b + ', ' + (alpha * 0.14).toFixed(3) + ')');
+              grad.addColorStop(1.00, 'rgba(' + cAmb.r + ', ' + cAmb.g + ', ' + cAmb.b + ', 0)');
+            } else if (orb.layer === 'mid') {
+              grad.addColorStop(0.00, 'rgba(' + cCore.r + ', ' + cCore.g + ', ' + cCore.b + ', ' + (alpha * 0.78 * contrastFlatten).toFixed(3) + ')');
+              grad.addColorStop(0.26, 'rgba(' + cMid.r + ', ' + cMid.g + ', ' + cMid.b + ', ' + (alpha * 0.56).toFixed(3) + ')');
+              grad.addColorStop(0.56, 'rgba(' + cHalo.r + ', ' + cHalo.g + ', ' + cHalo.b + ', ' + (alpha * 0.24).toFixed(3) + ')');
+              grad.addColorStop(0.82, 'rgba(' + cAmb.r + ', ' + cAmb.g + ', ' + cAmb.b + ', ' + (alpha * 0.07).toFixed(3) + ')');
+              grad.addColorStop(1.00, 'rgba(' + cAmb.r + ', ' + cAmb.g + ', ' + cAmb.b + ', 0)');
+            } else {
+              grad.addColorStop(0.00, 'rgba(' + cCore.r + ', ' + cCore.g + ', ' + cCore.b + ', ' + (alpha * 0.92 * contrastFlatten).toFixed(3) + ')');
+              grad.addColorStop(0.28, 'rgba(' + cMid.r + ', ' + cMid.g + ', ' + cMid.b + ', ' + (alpha * 0.68 * contrastFlatten).toFixed(3) + ')');
+              grad.addColorStop(0.58, 'rgba(' + cHalo.r + ', ' + cHalo.g + ', ' + cHalo.b + ', ' + (alpha * 0.28).toFixed(3) + ')');
+              grad.addColorStop(1.00, 'rgba(' + cAmb.r + ', ' + cAmb.g + ', ' + cAmb.b + ', 0)');
+            }
+
+            ctx.fillStyle = grad;
+            ctx.beginPath();
+            ctx.arc(x, y, outerR, 0, Math.PI * 2);
+            ctx.fill();
+          }
+
+          ctx.restore();
+        }
+
+        if (!sequenceFinished) {
+          rafId = requestAnimationFrame(renderFrame);
+        } else {
+          rafId = null;
+        }
+      }
+
+      function showCompleteScreen() {
+        if (completionActive) return;
+        completionActive = true;
+        screenSurvey.classList.remove('active-screen');
+        body.classList.add('is-completion-active');
+        screenComplete.classList.add('active-screen');
+        window.scrollTo(0, 0);
+
+        // レイアウト確定後に座標計測＆アニメーション開始
+        requestAnimationFrame(function() {
+          updateMetrics();
+
+          // prefers-reduced-motion が有効な環境ではアニメーションを省略し最終画面を表示
+          if (isReducedMotion) {
+            sequenceFinished = true;
+            body.classList.add('is-white-stage');
+            renderBackgroundAndSpread(1);
+            applyLogoDropShadow(1);
+
+            if (isIOS) {
+              clearApng();
+              const last = makeLogoImg(apngLastUrl || apngUrl || '');
+              last.style.opacity = '1';
+              apngHolder.appendChild(last);
+            } else {
+              const seekToEnd = function() {
+                if (Number.isFinite(video.duration) && video.duration > 0.1) {
+                  video.currentTime = Math.max(0, video.duration - 0.05);
+                }
+                video.style.opacity = '1';
+              };
+              if (video.readyState >= 1) {
+                seekToEnd();
+              } else {
+                video.addEventListener('loadedmetadata', seekToEnd, { once: true });
+              }
+            }
+
+            thankyouBlock.classList.add('visible');
+            thankyouBlock.style.opacity = '1';
+            thankyouBlock.style.transform = 'translateY(0)';
+            return;
+          }
+
+          // 本番：自動で一度だけアニメーションを再生し、最後に感謝メッセージが表示された状態で止まる
+          orbs = buildRisingOrbs();
+          const now = performance.now();
+          animStartTime = now;
+          lastFrameTime = now;
+          rafId = requestAnimationFrame(renderFrame);
+        });
+      }
+    })();
+  </script>
+</body>
+</html>
