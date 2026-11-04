@@ -918,22 +918,47 @@
       box-shadow: 0 0 14px rgba(246, 178, 109, 0.22);
     }
 
-    /* エラーメッセージバナー */
-    .validation-banner {
-      display: none;
-      padding: 11px 14px;
-      border-radius: 10px;
-      background: rgba(180, 53, 52, 0.28);
-      border: 1px solid var(--flame-orange);
-      color: var(--cream-light);
-      font-size: 0.82rem;
-      margin-top: 14px;
-      text-align: center;
-      animation: fadeStepIn 0.25s ease;
+    /* =========================================================
+       必須回答エラー表示（カード内個別エラー表示・全体バナー廃止）
+       ========================================================= */
+    .q-card.has-error {
+      border-color: #ec6645 !important;
+      box-shadow: 0 0 16px rgba(236, 102, 69, 0.35), inset 0 0 8px rgba(236, 102, 69, 0.08) !important;
+      transition: border-color 0.25s var(--transition-smooth), box-shadow 0.25s var(--transition-smooth);
     }
 
-    .validation-banner.show {
-      display: block;
+    .q-card-error {
+      display: none;
+      align-items: center;
+      gap: 6px;
+      padding: 8px 12px;
+      margin-top: 10px;
+      margin-bottom: 14px;
+      border-radius: 8px;
+      background: rgba(140, 36, 28, 0.42); /* 赤茶色の背景 */
+      border: 1px solid rgba(236, 102, 69, 0.55);
+      color: #f9ecc2; /* 淡いクリーム色の文字 */
+      font-size: 0.84rem;
+      font-weight: 600;
+      line-height: 1.45;
+      letter-spacing: 0.02em;
+      box-shadow: 0 2px 8px rgba(0, 0, 0, 0.25), inset 0 0 10px rgba(236, 102, 69, 0.12);
+      animation: cardErrorSlideDown 0.22s var(--transition-smooth) forwards;
+    }
+
+    .q-card.has-error .q-card-error {
+      display: flex;
+    }
+
+    @keyframes cardErrorSlideDown {
+      from {
+        opacity: 0;
+        transform: translateY(-4px);
+      }
+      to {
+        opacity: 1;
+        transform: translateY(0);
+      }
     }
 
     /* 送信失敗時のエラー表示バナー（入力内容を保持したまま再試行を案内） */
@@ -1465,6 +1490,7 @@
               </div>
               <span class="q-badge req">必須</span>
             </div>
+            <div class="q-card-error" role="alert">※年代を選択してください</div>
             <div class="select-wrapper">
               <select id="select-q1-age" class="dropdown-select" data-select-q="q1_age" aria-label="年代を選択してください">
                 <option value="" disabled selected>選択してください</option>
@@ -1489,6 +1515,7 @@
               </div>
               <span class="q-badge req">必須</span>
             </div>
+            <div class="q-card-error" role="alert">※性別を選択してください</div>
             <div class="options-grid-2" data-q="q2_gender" data-type="single">
               <button type="button" class="opt-btn" data-val="男性"><span class="opt-indicator"></span><span>男性</span></button>
               <button type="button" class="opt-btn" data-val="女性"><span class="opt-indicator"></span><span>女性</span></button>
@@ -1507,6 +1534,7 @@
               <span class="q-badge req">必須</span>
             </div>
 
+            <div class="q-card-error" role="alert">※職業を選択してください</div>
             <div class="select-wrapper">
               <select id="select-q3-occupation" class="dropdown-select" data-select-q="q3_occupation" data-other-wrap="wrap-q3-other" aria-label="ご職業・ご所属を選択してください">
                 <option value="" disabled selected>選択してください</option>
@@ -1538,7 +1566,6 @@
             </div>
           </div>
 
-          <div class="validation-banner" id="err-step-1">未回答の必須項目があります。黄色い枠の質問をご確認ください。</div>
 
           <div class="step-nav-bar">
             <button type="button" class="btn-back" id="btn-step1-back">扉へ戻る</button>
@@ -1562,6 +1589,7 @@
               <span class="q-badge req">必須</span>
             </div>
             <p class="q-subnote">※当てはまるものをすべてお選びください（複数選択可）</p>
+            <div class="q-card-error" role="alert">※交通手段を選択してください</div>
             <div class="options-grid-2" data-q="q4_transport" data-type="multi" data-other-wrap="wrap-q4-other">
               <button type="button" class="opt-btn" data-multi="true" data-val="徒歩"><span class="opt-indicator"></span><span>徒歩</span></button>
               <button type="button" class="opt-btn" data-multi="true" data-val="電車"><span class="opt-indicator"></span><span>電車</span></button>
@@ -1584,6 +1612,7 @@
               </div>
               <span class="q-badge req">必須</span>
             </div>
+            <div class="q-card-error" role="alert">※一緒に来場された方を選択してください</div>
             <div class="options-chips" data-q="q5_companion" data-type="single" data-other-wrap="wrap-q5-other">
               <button type="button" class="opt-btn" data-val="1人"><span class="opt-indicator"></span><span>1人</span></button>
               <button type="button" class="opt-btn" data-val="友人・恋人"><span class="opt-indicator"></span><span>友人・恋人</span></button>
@@ -1607,6 +1636,7 @@
             </div>
             <p class="q-subnote">※当てはまるものをすべてお選びください（複数選択可）</p>
 
+            <div class="q-card-error" role="alert">※津田沼祭を知ったきっかけを選択してください</div>
             <div data-q="q6_channel" data-type="multi" data-other-wrap="wrap-q6-other">
               <div class="cat-group-label">ポスター・看板・チラシ</div>
               <div class="options-chips">
@@ -1651,6 +1681,7 @@
             </div>
             <p class="q-subnote">※当てはまるものをすべてお選びください（複数選択可）</p>
 
+            <div class="q-card-error" role="alert">※来場目的を選択してください</div>
             <div class="options-chips" data-q="q7_purpose" data-type="multi" data-other-wrap="wrap-q7-other">
               <button type="button" class="opt-btn" data-multi="true" data-val="サークルの発表・展示"><span class="opt-indicator"></span><span>サークルの発表・展示</span></button>
               <button type="button" class="opt-btn" data-multi="true" data-val="ステージ発表"><span class="opt-indicator"></span><span>ステージ発表</span></button>
@@ -1669,7 +1700,6 @@
             </div>
           </div>
 
-          <div class="validation-banner" id="err-step-2">未回答の必須項目があります。黄色い枠の質問をご確認ください。</div>
 
           <div class="step-nav-bar">
             <button type="button" class="btn-back" id="btn-to-step1">← 戻る</button>
@@ -1694,6 +1724,7 @@
             </div>
             <p class="q-subnote">※1（不満）〜 5（大変満足）の「燈」をタップしてください</p>
 
+            <div class="q-card-error" role="alert">※満足度を選択してください</div>
             <div class="flame-rating-stage">
               <div class="flame-icons-row" id="flame-rating-group" role="radiogroup" aria-label="満足度5段階評価">
                 <!-- 形B（公式ロゴの炎曲線）・1〜5すべて同一サイズ＆左右中央揃え -->
@@ -1780,7 +1811,6 @@
             <textarea class="compact-textarea" id="q12_future_event" rows="1" placeholder="呼んでほしいゲスト、体験したい企画など（タップで広がります）"></textarea>
           </div>
 
-          <div class="validation-banner" id="err-step-3">Q8（満足度）の「燈」をタップして選択してください。</div>
 
           <!-- 送信失敗時のエラーメッセージ（入力内容は保持し再試行可能） -->
           <div class="submit-error-banner" id="submit-error-banner" role="alert" aria-live="assertive">
@@ -2121,11 +2151,15 @@
 
           flameLabel.textContent = ratingLabels[rate] || '';
           document.getElementById('card-q8').classList.remove('has-error');
-          document.getElementById('err-step-3').classList.remove('show');
         });
       });
 
-      // 5. バリデーション＆ステップ進行
+      // 5. バリデーション＆ステップ進行（カード内個別エラー表示・自動スクロール）
+      function scrollToCard(cardEl) {
+        if (!cardEl) return;
+        cardEl.scrollIntoView({ behavior: 'smooth', block: 'center' });
+      }
+
       function validateStep1() {
         let valid = true;
         const c1 = document.getElementById('card-q1');
@@ -2138,8 +2172,10 @@
 
         if (!state.q1_age || !state.q2_gender || !state.q3_occupation) {
           valid = false;
+          // 最初の未回答質問へスムーズスクロール
+          const firstErr = (!state.q1_age ? c1 : (!state.q2_gender ? c2 : c3));
+          scrollToCard(firstErr);
         }
-        document.getElementById('err-step-1').classList.toggle('show', !valid);
         return valid;
       }
 
@@ -2162,8 +2198,14 @@
           state.q7_purpose.length === 0
         ) {
           valid = false;
+          // 最初の未回答質問へスムーズスクロール
+          let firstErr = null;
+          if (state.q4_transport.length === 0) firstErr = c4;
+          else if (!state.q5_companion) firstErr = c5;
+          else if (state.q6_channel.length === 0) firstErr = c6;
+          else if (state.q7_purpose.length === 0) firstErr = c7;
+          scrollToCard(firstErr);
         }
-        document.getElementById('err-step-2').classList.toggle('show', !valid);
         return valid;
       }
 
@@ -2194,7 +2236,7 @@
         isSubmitting = submitting;
         submitBtn.disabled = submitting;
         backBtnStep3.disabled = submitting;
-        submitBtnText.textContent = submitting ? '送信中…' : '回答を送信する';
+        submitBtnText.textContent = submitting ? '送信中…' : 'テスト完了・演出確認（保存なし）';
       }
 
       function showSubmitError(detailText) {
@@ -2224,8 +2266,7 @@
         if (!state.q8_satisfaction) {
           const cardQ8 = document.getElementById('card-q8');
           cardQ8.classList.add('has-error');
-          document.getElementById('err-step-3').classList.add('show');
-          cardQ8.scrollIntoView({ behavior: 'smooth', block: 'center' });
+          scrollToCard(cardQ8);
           return;
         }
 
@@ -2262,6 +2303,112 @@
           hasSubmitted = true;
           showCompleteScreen();
         }, 500);
+      });
+
+      /* =========================================================
+         7. 送信完了アニメーション制御（完成版 v3 ＋ 構成案B 端末別WebM/APNG非同期取得）
+         ========================================================= */
+      const CONFIG = {
+        lightSizeScale: 0.68,
+        rangeWidthScale: 1.00,
+        upperReachOffsetPx: 0,
+        riseSpeedScale: 1.00,
+        logoStartDelay: 1.35,
+        logoFadeInDuration: 0.55,
+        meltCurveScale: 1.00,
+        whiteTransitionDuration: 1.70,
+        spreadSoftnessScale: 1.00,
+        messageFadeInDuration: 1.00,
+        orbCount: 34,
+        logoAnchorXRatio: 0.50,
+        logoAnchorYRatio: 0.335,
+        logoBottomYRatio: 0.61
+      };
+
+      const WARM_ORBS_PALETTE = [
+        {
+          core: { r: 255, g: 245, b: 218 },
+          mid:  { r: 246, g: 214, b: 156 },
+          halo: { r: 233, g: 168, b: 107 },
+          amb:  { r: 212, g: 128, b: 74 }
+        },
+        {
+          core: { r: 249, g: 236, b: 194 },
+          mid:  { r: 245, g: 204, b: 136 },
+          halo: { r: 236, g: 156, b: 94 },
+          amb:  { r: 206, g: 118, b: 68 }
+        },
+        {
+          core: { r: 255, g: 248, b: 228 },
+          mid:  { r: 248, g: 220, b: 168 },
+          halo: { r: 235, g: 176, b: 116 },
+          amb:  { r: 216, g: 138, b: 84 }
+        },
+        {
+          core: { r: 254, g: 240, b: 204 },
+          mid:  { r: 244, g: 196, b: 128 },
+          halo: { r: 228, g: 146, b: 86 },
+          amb:  { r: 198, g: 108, b: 62 }
+        }
+      ];
+
+      const ILLUMINATION_COLOR_RAMP = [
+        { pos: 0.00, color: { r: 17,  g: 27,  b: 54  } }, // #111B36 深い紺色
+        { pos: 0.28, color: { r: 59,  g: 68,  b: 89  } }, // 落ち着いた薄暮色
+        { pos: 0.54, color: { r: 141, g: 138, b: 134 } }, // 黄色みを抑えたウォームグレージュ
+        { pos: 0.78, color: { r: 232, g: 223, b: 209 } }, // #E8DFD1 アイボリー・ベージュ
+        { pos: 1.00, color: { r: 255, g: 252, b: 247 } }  // #FFFCF7 最終オフホワイト
+      ];
+
+      const IVORY_BEIGE_MID = { r: 232, g: 223, b: 209 }; // #E8DFD1
+      const FINAL_OFF_WHITE = { r: 255, g: 252, b: 247 }; // #FFFCF7
+
+      function createSeededRandom(seed) {
+        let s = seed >>> 0;
+        return function() {
+          s = (s * 1664525 + 1013904223) >>> 0;
+          return s / 4294967296;
+        };
+      }
+
+      const body = document.body;
+      const canvas = document.getElementById('effect-canvas');
+      const ctx = canvas.getContext('2d');
+      const logoAnchor = document.getElementById('logo-anchor');
+      const video = document.getElementById('logo-video');
+      const freezeCanvas = document.getElementById('logo-freeze-canvas');
+      const freezeCtx = freezeCanvas.getContext('2d');
+      const apngHolder = document.getElementById('logo-apng-holder');
+      const svgFallback = document.getElementById('logo-svg-fallback');
+      const thankyouBlock = document.getElementById('thankyou-block');
+
+      let width = window.innerWidth;
+      let height = window.innerHeight;
+      let dpr = Math.min(window.devicePixelRatio || 1, 2);
+
+      let targetPoint = { x: width * 0.5, y: height * 0.40 };
+      let logoBottomY = height * 0.48;
+      let logoVisibleWidth = 200;
+      let maxCornerDist = 800;
+
+      let orbs = [];
+      let rafId = null;
+      let completionActive = false;
+      let animStartTime = 0;
+      let lastFrameTime = 0;
+      let logoStarted = false;
+      let logoStartTime = 0;
+      let frameCaptured = false;
+      let whiteSpreadStarted = false;
+      let whiteSpreadStartTime = 0;
+      let messageStarted = false;
+      let messageStartTime = 0;
+      let sequenceFinished = false;
+
+      const mediaQueryReduced = window.matchMedia('(prefers-reduced-motion: reduce)');
+      let isReducedMotion = mediaQueryReduced.matches;
+      mediaQueryReduced.addEventListener('change', function(e) {
+        isReducedMotion = e.matches;
       });
 
       /* =========================================================
